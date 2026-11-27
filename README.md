@@ -95,3 +95,10 @@ npm run dev
 - **Deployment Guide:** [`docs/deployment/DEPLOYMENT_GUIDE.md`](docs/deployment/DEPLOYMENT_GUIDE.md)
 - **Known Limitations:** [`docs/operations/KNOWN_LIMITATIONS.md`](docs/operations/KNOWN_LIMITATIONS.md)
 - **CTO Final Completion Report:** [`KAVACH_VAANI_FINAL_COMPLETION_REPORT.md`](KAVACH_VAANI_FINAL_COMPLETION_REPORT.md)
+
+---
+
+## 👥 6. Core Team & Contributors
+- **Hemanth Raj S** ([@hemanthrajs-sabbpe](https://github.com/hemanthrajs-sabbpe)) — *Full-Stack Lead, Multilingual Voice UI, Indic PDF & Statutory Rules Engine*
+- **Deekshith K B** ([@DEEKSHITH439](https://github.com/DEEKSHITH439)) — *Project Architect & Team Lead, Scaler × Flow Build for Bharat Hackathon (Team EKALAVYA)*
+
