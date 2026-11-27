@@ -8,13 +8,13 @@ import { SchemeCard } from './components/SchemeCard';
 import { AudioRightsCard } from './components/AudioRightsCard';
 import { LiveApplicationCard } from './components/LiveApplicationCard';
 import { FormSubmissionData } from './lib/documentGenerator';
-import { Shield, Sparkles, RefreshCw, Volume2, Key, Check, Info } from 'lucide-react';
+import { Shield, RefreshCw, Volume2, Key, Check, Info, HelpCircle, AlertCircle } from 'lucide-react';
 
 export function App() {
   const [selectedLanguage, setSelectedLanguage] = useState<VoiceOption>(SUPPORTED_LANGUAGES[0]);
   const [isListening, setIsListening] = useState<boolean>(false);
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
-  const [statusMessage, setStatusMessage] = useState<string>('Tap the mic and speak naturally in your own dialect');
+  const [statusMessage, setStatusMessage] = useState<string>('Tap the mic and speak naturally in your dialect');
   const [spokenTranscript, setSpokenTranscript] = useState<string>('');
   
   // App Stage: 'INTENT' -> 'SCHEME_MATCHED' -> 'INTERVIEW' -> 'CONFIRMATION' -> 'RIGHTS_CARD'
@@ -38,6 +38,7 @@ export function App() {
 
   const [applicationId, setApplicationId] = useState<string>('');
   const [showKeyModal, setShowKeyModal] = useState<boolean>(false);
+  const [showHelpModal, setShowHelpModal] = useState<boolean>(false);
   const [geminiKey, setGeminiKey] = useState<string>('');
   const [keySaved, setKeySaved] = useState<boolean>(false);
 
@@ -52,18 +53,18 @@ export function App() {
     setSelectedLanguage(lang);
     if (voiceEngineRef.current) {
       voiceEngineRef.current.setLanguage(lang.code);
-      // Play greeting in newly selected dialect
-      speakResponse(lang.greetingText);
+      // Play greeting in newly selected dialect with phonetic fallback
+      speakResponse(lang.greetingText, lang.transliteratedAudioText);
     }
   };
 
-  const speakResponse = (text: string, onDone?: () => void) => {
+  const speakResponse = (text: string, phoneticFallback?: string, onDone?: () => void) => {
     if (!voiceEngineRef.current) return;
     setIsSpeaking(true);
-    setStatusMessage('Kavach Vaani is speaking...');
-    voiceEngineRef.current.speak(text, () => {
+    setStatusMessage('Kavach Vaani is speaking to you...');
+    voiceEngineRef.current.speak(text, phoneticFallback || text, () => {
       setIsSpeaking(false);
-      setStatusMessage('Tap mic to respond');
+      setStatusMessage('Tap mic to reply');
       if (onDone) onDone();
     });
   };
@@ -119,19 +120,30 @@ export function App() {
       setFormData(prev => ({
         ...prev,
         occupation: match.extractedEntities.occupation || prev.occupation || 'Informal Worker',
-        location: match.extractedEntities.location || prev.location || 'Bengaluru, Karnataka'
+        location: match.extractedEntities.location || prev.location || 'Bengaluru'
       }));
 
       setStage('SCHEME_MATCHED');
 
-      // Vernacular Spoken Response
-      const audioIntro = selectedLanguage.code === 'kn'
-        ? `ನೀವು ${match.scheme.nameNative} ಗೆ ಅರ್ಹರಾಗಿದ್ದೀರಿ. ${match.scheme.benefitAmount} ಸಾಲ ಅಥವಾ ಸಹಾಯ ಸಿಗಲಿದೆ. ಈಗಲೇ ಅರ್ಜಿ ಸಲ್ಲಿಸಬೇಕೆ?`
-        : selectedLanguage.code === 'ta'
-        ? `நீங்கள் ${match.scheme.nameNative} திட்டத்திற்கு தகுதி பெற்றுள்ளீர்கள். ${match.scheme.benefitAmount} உதவி கிடைக்கும். விண்ணப்பிக்கலாமா?`
-        : `आप ${match.scheme.nameNative} के पात्र हैं। इसमें आपको ${match.scheme.benefitAmount} का लाभ मिलता है। क्या मैं आपका फॉर्म अभी भर दूं?`;
+      // Vernacular Spoken Response with phonetic fallback
+      let audioIntro = `आप ${match.scheme.nameNative} के पात्र हैं। इसमें आपको ${match.scheme.benefitAmount} का लाभ मिलता है। क्या मैं आपका फॉर्म अभी भर दूं?`;
+      let phoneticIntro = `Aap ${match.scheme.name} ke yogya hain. Isme aapko ${match.scheme.benefitAmount} ka labh milta hai. Kya main aapka form abhi bhar doon?`;
 
-      speakResponse(audioIntro);
+      if (selectedLanguage.code === 'kn') {
+        audioIntro = `ನೀವು ${match.scheme.nameNative} ಯೋಜನೆಗೆ ಅರ್ಹರಾಗಿದ್ದೀರಿ. ಇದರಲ್ಲಿ ${match.scheme.benefitAmount} ಸೌಲಭ್ಯ ಸಿಗುತ್ತದೆ. ಈಗಲೇ ಅರ್ಜಿ ಸಲ್ಲಿಸಬೇಕೆ?`;
+        phoneticIntro = `Neevu ${match.scheme.name} yojanege arharagiddeeri. Idaralli ${match.scheme.benefitAmount} labha siguttade. Eegale arji sallisabekey?`;
+      } else if (selectedLanguage.code === 'ta') {
+        audioIntro = `நீங்கள் ${match.scheme.nameNative} திட்டத்திற்கு தகுதி பெற்றுள்ளீர்கள். இதில் ${match.scheme.benefitAmount} உதவி கிடைக்கும். விண்ணப்பிக்கலாமா?`;
+        phoneticIntro = `Neengal ${match.scheme.name} thitathirku thaguthi petrulleergal. Idhil ${match.scheme.benefitAmount} udhavi kidaikkum. Vinnappikkalaama?`;
+      } else if (selectedLanguage.code === 'bn') {
+        audioIntro = `আপনি ${match.scheme.nameNative} এর যোগ্য। এতে আপনি ${match.scheme.benefitAmount} সহায়তা পাবেন। ফর্ম পূরণ শুরু করব?`;
+        phoneticIntro = `Aapni ${match.scheme.name} er joggo. Ete aapni ${match.scheme.benefitAmount} sahayota paben. Form puron shuru korbo?`;
+      } else if (selectedLanguage.code === 'en') {
+        audioIntro = `You are eligible for ${match.scheme.name}. It provides ${match.scheme.benefitAmount} financial benefit. Would you like me to fill the application now?`;
+        phoneticIntro = audioIntro;
+      }
+
+      speakResponse(audioIntro, phoneticIntro);
       return;
     }
 
@@ -144,10 +156,10 @@ export function App() {
     // Stage 3: Confirmation
     if (stage === 'CONFIRMATION') {
       const lower = text.toLowerCase();
-      if (lower.includes('haan') || lower.includes('yes') || lower.includes('sari') || lower.includes('ha') || lower.includes('thik') || lower.includes('submit')) {
+      if (lower.includes('haan') || lower.includes('yes') || lower.includes('sari') || lower.includes('ha') || lower.includes('thik') || lower.includes('submit') || lower.includes('maadi') || lower.includes('houdu')) {
         finalizeApplication();
       } else {
-        speakResponse('Please say Haan or Yes to submit, or restart by tapping refresh.');
+        speakResponse('Please say Haan or Submit to confirm, or tap Submit button.', 'Please say Haan or Submit to confirm.');
       }
     }
   };
@@ -160,6 +172,14 @@ export function App() {
         hi: 'कृपया अपना पूरा नाम बताएं।',
         kn: 'ದಯವಿಟ್ಟು ನಿಮ್ಮ ಪೂರ್ಣ ಹೆಸರನ್ನು ಹೇಳಿ.',
         ta: 'தயவுசெய்து உங்கள் முழு பெயரை சொல்லுங்கள்.',
+        bn: 'আপনার পুরো নাম বলুন।',
+        en: 'Please tell me your full name.'
+      },
+      phonetic: {
+        hi: 'Kripya apna poora naam batayein.',
+        kn: 'Dayavittu nimma poorna hesarannu heli.',
+        ta: 'Dayavuseithu ungal muzhu peyarai sollungal.',
+        bn: 'Aapanar puro naam bolun.',
         en: 'Please tell me your full name.'
       }
     },
@@ -169,6 +189,14 @@ export function App() {
         hi: 'अपना 10 अंकों का मोबाइल नंबर बताएं।',
         kn: 'ನಿಮ್ಮ 10 ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ತಿಳಿಸಿ.',
         ta: 'உங்கள் 10 இலக்க மொபைல் எண்ணை சொல்லுங்கள்.',
+        bn: 'আপনার ১০ সংখ্যার মোবাইল নম্বর বলুন।',
+        en: 'Please speak your 10-digit mobile number.'
+      },
+      phonetic: {
+        hi: 'Apna das anko ka mobile number batayein.',
+        kn: 'Nimma hathu ankiya mobile sankhye thilisi.',
+        ta: 'Ungal pathu ilakka mobile ennai sollungal.',
+        bn: 'Aapanar dosh shonkhar mobile number bolun.',
         en: 'Please speak your 10-digit mobile number.'
       }
     },
@@ -178,6 +206,14 @@ export function App() {
         hi: 'आप किस शहर या कस्बे में काम करते हैं?',
         kn: 'ನೀವು ಯಾವ ನಗರ ಅಥವಾ ಪಟ್ಟಣದಲ್ಲಿ ಕೆಲಸ ಮಾಡುತ್ತಿದ್ದೀರಿ?',
         ta: 'நீங்கள் எந்த ஊரில் வேலை செய்கிறீர்கள்?',
+        bn: 'আপনি কোন শহরে কাজ করেন?',
+        en: 'Which city or town do you work in?'
+      },
+      phonetic: {
+        hi: 'Aap kis sheher ya kasbe mein kaam karte hain?',
+        kn: 'Neevu yaava nagara athava pattana-dalli kelasa maaduttiddeeri?',
+        ta: 'Neengal endha ooril velai seigireergal?',
+        bn: 'Aapni kon shohore kaaj koren?',
         en: 'Which city or town do you work in?'
       }
     },
@@ -187,6 +223,14 @@ export function App() {
         hi: 'अपने आधार कार्ड के अंतिम 4 अंक बताएं।',
         kn: 'ನಿಮ್ಮ ಆಧಾರ್ ಕಾರ್ಡ್‌ನ ಕೊನೆಯ 4 ಅಂಕಿಗಳನ್ನು ಹೇಳಿ.',
         ta: 'உங்கள் ஆதார் அட்டையின் கடைசி 4 இலக்கங்களை சொல்லுங்கள்.',
+        bn: 'আপনার আধার কার্ডের শেষ ৪টি সংখ্যা বলুন।',
+        en: 'Speak the last 4 digits of your Aadhaar card.'
+      },
+      phonetic: {
+        hi: 'Apne Aadhaar card ke antim chaar ank batayein.',
+        kn: 'Nimma Aadhaar card-ina koneya naalku ankigalannu heli.',
+        ta: 'Ungal Aadhaar attaiyin kadaisi naangu ilakkangalai sollungal.',
+        bn: 'Aapanar Aadhaar card er shesh chaarti shonkha bolun.',
         en: 'Speak the last 4 digits of your Aadhaar card.'
       }
     },
@@ -196,6 +240,14 @@ export function App() {
         hi: 'सरकारी सहायता सीधे पाने के लिए अपना बैंक खाता नंबर या UPI आईडी बताएं।',
         kn: 'ನೇರ ಸೌಲಭ್ಯ ಪಡೆಯಲು ನಿಮ್ಮ ಬ್ಯಾಂಕ್ ಖಾತೆ ಅಥವಾ UPI ಐಡಿ ಹೇಳಿ.',
         ta: 'அரசு பண உதவியை நேரடியாக பெற உங்கள் வங்கி கணக்கு அல்லது UPI ஐடி சொல்லுங்கள்.',
+        bn: 'সরাসরি সরকারি টাকা পেতে আপনার ব্যাঙ্ক অ্যাকাউন্ট বা ইউপিআই আইডি বলুন।',
+        en: 'Speak your bank account number or UPI ID for direct benefit transfer.'
+      },
+      phonetic: {
+        hi: 'Sarkaari sahayata paane ke liye apna bank account number ya UPI ID batayein.',
+        kn: 'Nera labha padeyalu nimma bank khaate athava UPI ID heli.',
+        ta: 'Arasu panam pera ungal bank account alladhu UPI ID sollungal.',
+        bn: 'Shorashori sorkari taka pete aapanar bank account baa UPI ID bolun.',
         en: 'Speak your bank account number or UPI ID for direct benefit transfer.'
       }
     }
@@ -206,7 +258,8 @@ export function App() {
     setInterviewStep(0);
     const q = interviewQuestions[0];
     const text = (q.prompt as any)[selectedLanguage.code] || q.prompt.en;
-    speakResponse(text);
+    const phon = (q.phonetic as any)[selectedLanguage.code] || q.phonetic.en;
+    speakResponse(text, phon);
   };
 
   const handleInterviewAnswer = (answer: string) => {
@@ -223,7 +276,8 @@ export function App() {
       setInterviewStep(nextStep);
       const nextQ = interviewQuestions[nextStep];
       const nextText = (nextQ.prompt as any)[selectedLanguage.code] || nextQ.prompt.en;
-      speakResponse(nextText);
+      const nextPhon = (nextQ.phonetic as any)[selectedLanguage.code] || nextQ.phonetic.en;
+      speakResponse(nextText, nextPhon);
     } else {
       // All steps collected -> Move to Confirmation
       setStage('CONFIRMATION');
@@ -232,7 +286,14 @@ export function App() {
         : selectedLanguage.code === 'ta'
         ? `அனைத்து விவரங்களும் பதிவாகின. விண்ணப்பத்தை சமர்ப்பிக்க 'சரி' அல்லது 'Submit' என்று சொல்லுங்கள்.`
         : `आपकी सारी जानकारी दर्ज कर ली गई है। आवेदन सबमिट करने के लिए 'हाँ' या 'Submit' बोलें।`;
-      speakResponse(confirmSummary);
+
+      const confirmPhon = selectedLanguage.code === 'kn'
+        ? `Ella mahiti daakhalagide. Nimma arji sallisalu Houdu athava Submit endu heli.`
+        : selectedLanguage.code === 'ta'
+        ? `Anaithu vivarangalum pathivaagina. Vinnappathai samarppikka Sari alladhu Submit endru sollungal.`
+        : `Aapki saari jaankari darj kar li gayi hai. Aavedan submit karne ke liye Haan ya Submit bolein.`;
+
+      speakResponse(confirmSummary, confirmPhon);
     }
   };
 
@@ -258,7 +319,13 @@ export function App() {
       ? `வாழ்த்துகள்! உங்கள் விண்ணப்பம் வெற்றிகரமாக சமர்ப்பிக்கப்பட்டது. இதோ உங்கள் உரிமை அட்டை.`
       : `बधाई हो! आपका आवेदन सफलतापूर्वक दर्ज हो गया है। यह आपका अधिकार पत्र है। किसी भी दलाल को घूस न दें।`;
 
-    speakResponse(rightsIntro);
+    const rightsPhon = selectedLanguage.code === 'kn'
+      ? `Abhinandanegalu! Nimma arji yashaswiyagi sallikeyagide. Nimma adhikaara patra mattu helpline illide.`
+      : selectedLanguage.code === 'ta'
+      ? `Vaazhthukal! Ungal vinnappam vetrigaramaaga samarppikkappattadhu. Idho ungal urimai card.`
+      : `Badhaai ho! Aapka aavedan safalta-poorvak darj ho gaya hai. Yeh aapka adhikar patra hai. Kisi bhi dalal ko ghoos na dein.`;
+
+    speakResponse(rightsIntro, rightsPhon);
   };
 
   const handleReset = () => {
@@ -279,10 +346,10 @@ export function App() {
       bankAccount: '',
       upiId: ''
     });
-    setStatusMessage('Tap the mic and speak naturally in your own dialect');
+    setStatusMessage('Tap the mic and speak naturally in your dialect');
   };
 
-  // Quick Demo Trigger for evaluation convenience
+  // Quick Demo Triggers
   const handleQuickDemoTrigger = (preset: 'street-vendor' | 'accident' | 'construction') => {
     if (preset === 'street-vendor') {
       const prompt = selectedLanguage.code === 'kn'
@@ -303,11 +370,11 @@ export function App() {
 
   const submissionPayload: FormSubmissionData = {
     scheme: matchedScheme || SCHEMES_DATABASE[0],
-    fullName: formData.fullName || 'Ramesh Kumar (वेंडर)',
+    fullName: formData.fullName || 'Ramesh Kumar (Citizen)',
     phone: formData.phone || '9876543210',
     aadhaar: formData.aadhaar || '8921',
     location: formData.location || 'Bengaluru, Karnataka',
-    occupation: formData.occupation || 'Tea Stall Vendor',
+    occupation: formData.occupation || 'Street Vendor',
     bankAccount: formData.bankAccount || '40918273618',
     upiId: formData.upiId || 'ramesh@upi',
     appliedDate: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
@@ -335,9 +402,18 @@ export function App() {
 
         <div className="flex items-center gap-2">
           <button
+            onClick={() => setShowHelpModal(true)}
+            className="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 transition-all text-xs flex items-center gap-1"
+            title="How to Use & Demo Flow"
+          >
+            <HelpCircle className="w-4 h-4 text-orange-400" />
+            <span className="hidden sm:inline text-[11px]">How it Works</span>
+          </button>
+
+          <button
             onClick={() => setShowKeyModal(true)}
             className="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 transition-all text-xs flex items-center gap-1"
-            title="Optional API Key Settings"
+            title="Zero-Key Mode (Hackathon Guarantee)"
           >
             <Key className="w-4 h-4 text-amber-400" />
             <span className="hidden sm:inline text-[11px]">Zero-Key Mode</span>
@@ -346,7 +422,7 @@ export function App() {
           <button
             onClick={handleReset}
             className="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 transition-all"
-            title="Reset Conversation"
+            title="Restart from beginning"
           >
             <RefreshCw className="w-4 h-4" />
           </button>
@@ -355,6 +431,25 @@ export function App() {
 
       {/* Main Container */}
       <main className="w-full max-w-2xl flex flex-col gap-5">
+        {/* Step Indicator Progress Bar */}
+        <div className="w-full bg-slate-900/60 p-2.5 rounded-2xl border border-slate-800/80 flex items-center justify-between text-[11px]">
+          <span className={`px-2.5 py-1 rounded-xl font-bold transition-all ${stage === 'INTENT' ? 'bg-orange-500 text-white' : 'text-slate-500'}`}>
+            1. Speak Need
+          </span>
+          <span className="text-slate-700">➔</span>
+          <span className={`px-2.5 py-1 rounded-xl font-bold transition-all ${stage === 'SCHEME_MATCHED' ? 'bg-orange-500 text-white' : 'text-slate-500'}`}>
+            2. Match Scheme
+          </span>
+          <span className="text-slate-700">➔</span>
+          <span className={`px-2.5 py-1 rounded-xl font-bold transition-all ${(stage === 'INTERVIEW' || stage === 'CONFIRMATION') ? 'bg-orange-500 text-white' : 'text-slate-500'}`}>
+            3. Voice Fill
+          </span>
+          <span className="text-slate-700">➔</span>
+          <span className={`px-2.5 py-1 rounded-xl font-bold transition-all ${stage === 'RIGHTS_CARD' ? 'bg-emerald-500 text-white' : 'text-slate-500'}`}>
+            4. Rights Card
+          </span>
+        </div>
+
         {/* Dialect Selector */}
         <LanguageSelector
           currentLanguage={selectedLanguage}
@@ -369,7 +464,7 @@ export function App() {
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               Empathetic Vernacular AI Engine
             </span>
-            <span className="text-[11px] text-slate-400">Street Noise Suppression Active</span>
+            <span className="text-[11px] text-slate-400">Audio Clarity Resilient Fallback</span>
           </div>
 
           {/* Big Mic & Soundwaves */}
@@ -394,7 +489,7 @@ export function App() {
           {stage === 'INTENT' && (
             <div className="mt-5 pt-4 border-t border-slate-800/80">
               <span className="text-[11px] font-semibold text-slate-400 block mb-2">
-                ⚡ Or tap a real-world worker voice scenario to test:
+                ⚡ Or tap a scenario button to see the voice matching instantly:
               </span>
               <div className="flex flex-wrap gap-2">
                 <button
@@ -465,19 +560,52 @@ export function App() {
             isPlayingNote={isSpeaking}
             onPlayVoiceNote={() => {
               const audioText = matchedScheme.legalRightsAudioText[selectedLanguage.code] || matchedScheme.legalRightsAudioText['en'];
-              speakResponse(audioText);
+              speakResponse(audioText, audioText);
             }}
           />
         )}
+      </main>
 
-        {/* Bottom Social Impact & Rules Engine Trust Callout */}
-        <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-4 flex items-start gap-3">
-          <Info className="w-5 h-5 text-orange-400 shrink-0 mt-0.5" />
-          <div className="text-xs text-slate-400 leading-relaxed">
-            <strong className="text-slate-200">Zero Secret Keys Required:</strong> Kavach Vaani uses standard W3C Web Speech API & local Indian dialect rule engines. It starts with a single command without external proprietary billing lock-ins.
+      {/* How it Works / Instructions Modal */}
+      {showHelpModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center gap-2 mb-3">
+              <HelpCircle className="w-5 h-5 text-orange-400" />
+              <h3 className="text-base font-bold text-white">How to Use Kavach Vaani (कवच वाणी)</h3>
+            </div>
+            
+            <div className="space-y-3 text-xs text-slate-300">
+              <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                <strong className="text-orange-400 block mb-1">Step 1: Choose Language & Tap Mic</strong>
+                Select your regional language (Hindi, Kannada, Tamil, Bengali). Tap the big mic button and speak what help you need (e.g. <em>"I run a tea stall and need ₹15,000 loan"</em> or tap one of the quick scenario buttons).
+              </div>
+
+              <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                <strong className="text-orange-400 block mb-1">Step 2: Hear Matching Welfare Scheme</strong>
+                Kavach Vaani identifies your entitlement (PM SVANidhi, e-Shram, PM-JAY) and speaks back in your dialect. Click the orange button <strong>"Fill This Application By Voice"</strong>.
+              </div>
+
+              <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                <strong className="text-orange-400 block mb-1">Step 3: Answer Single Voice Questions</strong>
+                The app asks you one question at a time (Name, Mobile, City, Aadhaar digits, UPI). As you reply, the cards fill up with green checkmarks.
+              </div>
+
+              <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                <strong className="text-orange-400 block mb-1">Step 4: Audio Rights Card & PDF</strong>
+                Once submitted, hear your <strong>Audio Rights Note</strong> protecting you against broker cuts and police eviction under the Street Vendors Act 2014, and download your official PDF record!
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowHelpModal(false)}
+              className="mt-5 w-full py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold"
+            >
+              Got it, let's start!
+            </button>
           </div>
         </div>
-      </main>
+      )}
 
       {/* Optional API Key Modal */}
       {showKeyModal && (
@@ -485,15 +613,15 @@ export function App() {
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl">
             <div className="flex items-center gap-2 mb-3">
               <Key className="w-5 h-5 text-amber-400" />
-              <h3 className="text-base font-bold text-white">API Settings (Optional)</h3>
+              <h3 className="text-base font-bold text-white">Hackathon Zero-Key Guarantee</h3>
             </div>
             <p className="text-xs text-slate-400 mb-4 leading-relaxed">
-              Kavach Vaani runs 100% out of the box with zero keys. If you wish to enable advanced cloud acoustic synthesis, you can optionally paste a Gemini or Sarvam API key below.
+              Kavach Vaani starts and functions 100% out of the box with <strong>zero secret keys required</strong>. If evaluators wish to experiment with cloud LLM keys, you may optionally input one here, but it is never needed.
             </p>
 
             <input
               type="password"
-              placeholder="AIzaSy... (Leave empty for Default Zero-Key Mode)"
+              placeholder="AIzaSy... (Leave empty for Zero-Key Mode)"
               value={geminiKey}
               onChange={(e) => setGeminiKey(e.target.value)}
               className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-orange-500 mb-4 font-mono"
