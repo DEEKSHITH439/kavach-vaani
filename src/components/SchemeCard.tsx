@@ -1,6 +1,6 @@
 import React from 'react';
 import { Scheme } from '../lib/schemeRules';
-import { CheckCircle2, Award, ArrowRight, Sparkles } from 'lucide-react';
+import { Award, ArrowRight, Sparkles, AlertCircle } from 'lucide-react';
 
 interface SchemeCardProps {
   scheme: Scheme;
@@ -15,12 +15,12 @@ export const SchemeCard: React.FC<SchemeCardProps> = ({
   onConfirmApply,
   langCode
 }) => {
-  const nativeDesc = scheme.benefitDescriptionNative[langCode] || scheme.benefitDescriptionNative['en'];
+  const schemeNameNative = scheme.nameNative[langCode] || scheme.nameNative['en'];
 
   return (
     <div className="bg-gradient-to-b from-slate-900/90 to-slate-950 border border-orange-500/40 rounded-3xl p-5 shadow-2xl relative overflow-hidden backdrop-blur-md">
       <div className="absolute top-0 right-0 bg-gradient-to-l from-orange-500 to-amber-500 text-slate-950 font-black text-[10px] uppercase px-4 py-1 rounded-bl-xl tracking-wider flex items-center gap-1">
-        <Sparkles className="w-3 h-3" /> Best Entitlement Match
+        <Sparkles className="w-3 h-3" /> Preliminary Match
       </div>
 
       <div className="flex items-start gap-3 mt-1 mb-3">
@@ -29,7 +29,7 @@ export const SchemeCard: React.FC<SchemeCardProps> = ({
         </div>
         <div>
           <h2 className="text-lg font-black text-white">{scheme.name}</h2>
-          <p className="text-xs font-bold text-orange-400">{scheme.nameNative}</p>
+          <p className="text-xs font-bold text-orange-400">{schemeNameNative}</p>
         </div>
       </div>
 
@@ -37,30 +37,46 @@ export const SchemeCard: React.FC<SchemeCardProps> = ({
       <div className="my-3 p-3 bg-slate-800/80 rounded-2xl border border-slate-700/60 flex items-center justify-between">
         <div>
           <span className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold block">
-            Government Grant / Loan Limit
+            Progressive Working Capital Loan Structure
           </span>
-          <span className="text-xl font-black text-emerald-400">{scheme.benefitAmount}</span>
+          <span className="text-lg font-black text-emerald-400">{scheme.benefitAmountSummary}</span>
         </div>
         <span className="text-[10px] font-bold px-2.5 py-1 bg-emerald-950/70 text-emerald-300 rounded-full border border-emerald-500/30">
           Zero Collateral
         </span>
       </div>
 
-      <p className="text-xs text-slate-300 leading-relaxed mb-3">
-        {nativeDesc}
-      </p>
+      {/* Tranche Breakdown if available */}
+      {scheme.tranches && scheme.tranches.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3">
+          {scheme.tranches.map((t) => (
+            <div key={t.stage} className="p-2.5 bg-black/40 rounded-xl border border-white/5">
+              <span className="text-[10px] font-bold text-orange-300 block">{t.label}</span>
+              <p className="text-[10px] text-slate-400 mt-0.5">{t.conditionNative[langCode] || t.conditionNative['en']}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
+      {/* Interest Subsidy Callout */}
+      {scheme.interestSubsidyInfo && (
+        <div className="p-2.5 bg-emerald-950/30 border border-emerald-500/30 rounded-xl mb-3 text-xs text-emerald-200">
+          <strong>7% per year interest subsidy:</strong> {scheme.interestSubsidyInfo.descriptionNative[langCode] || scheme.interestSubsidyInfo.descriptionNative['en']}
+        </div>
+      )}
+
+      {/* Reason for preliminary match */}
       <div className="bg-black/30 p-2.5 rounded-xl border border-white/5 mb-4">
         <span className="text-[11px] font-semibold text-orange-300 block mb-1">
-          Why you qualify (Voice AI Analysis):
+          Preliminary AI Analysis:
         </span>
         <p className="text-[11px] text-slate-300">{matchedReason}</p>
       </div>
 
-      <div className="flex items-center gap-2 mb-5">
-        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-        <span className="text-xs text-slate-300">
-          No paperwork needed. Complete by speaking in 90 seconds.
+      <div className="flex items-center gap-2 mb-5 text-xs text-amber-200/90">
+        <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
+        <span>
+          Final loan approval requires verification of your CoV / LoR and bank assessment.
         </span>
       </div>
 
@@ -68,7 +84,7 @@ export const SchemeCard: React.FC<SchemeCardProps> = ({
         onClick={onConfirmApply}
         className="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-600 hover:to-amber-600 text-white font-extrabold text-sm shadow-xl shadow-orange-950/50 flex items-center justify-center gap-2 active:scale-95 transition-all"
       >
-        <span>Fill This Application By Voice (बोलकर भरें)</span>
+        <span>Check Eligibility & Review Requirements</span>
         <ArrowRight className="w-4 h-4" />
       </button>
     </div>

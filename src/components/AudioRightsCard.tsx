@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Download, AlertTriangle, PhoneCall, Volume2 } from 'lucide-react';
+import { ShieldCheck, Download, AlertTriangle, PhoneCall, Volume2, Info } from 'lucide-react';
 import { Scheme } from '../lib/schemeRules';
 import { FormSubmissionData, generateApplicationPDF } from '../lib/documentGenerator';
 
@@ -22,6 +22,14 @@ export const AudioRightsCard: React.FC<AudioRightsCardProps> = ({
 
   return (
     <div className="bg-gradient-to-b from-slate-900 to-slate-950 border-2 border-emerald-500/50 rounded-3xl p-5 shadow-2xl relative overflow-hidden">
+      {/* Simulation Banner Notice */}
+      <div className="bg-amber-950/60 border border-amber-500/40 rounded-xl p-2.5 mb-4 flex items-center gap-2 text-[11px] text-amber-200">
+        <Info className="w-4 h-4 text-amber-400 shrink-0" />
+        <span>
+          <strong>Prototype Sandbox Simulation:</strong> Application ID <span className="font-mono font-bold text-white">#{formData.applicationId}</span> is generated for hackathon demonstration. Direct government portal submission is simulated.
+        </span>
+      </div>
+
       {/* Top Badge */}
       <div className="flex items-center justify-between border-b border-emerald-500/30 pb-3 mb-4">
         <div className="flex items-center gap-2">
@@ -30,7 +38,7 @@ export const AudioRightsCard: React.FC<AudioRightsCardProps> = ({
           </div>
           <div>
             <h3 className="font-bold text-base text-white">Audio Rights Card (अधिकार पत्र)</h3>
-            <p className="text-[11px] text-emerald-400 font-medium">100% Free Government Direct Filing</p>
+            <p className="text-[11px] text-emerald-400 font-medium">Statutory Entitlement & Anti-Extortion Record</p>
           </div>
         </div>
         <span className="text-[10px] bg-emerald-950 text-emerald-300 px-2.5 py-1 rounded-full border border-emerald-500/40 font-mono">
@@ -71,7 +79,7 @@ export const AudioRightsCard: React.FC<AudioRightsCardProps> = ({
         <div className="flex items-start gap-2">
           <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
           <span className="text-amber-200">
-            <strong>Zero Dalal Guarantee:</strong> Never pay any broker or municipal agent. This application is registered with official logs.
+            <strong>Zero Dalal Guarantee:</strong> Statutory welfare benefit. Do not pay any fees or commissions to local agents or cafes.
           </span>
         </div>
       </div>
