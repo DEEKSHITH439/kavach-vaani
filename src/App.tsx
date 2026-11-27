@@ -39,8 +39,8 @@ export function App() {
   const [playbackState, setPlaybackState] = useState<PlaybackState>({
     isPlaying: false,
     source: 'none',
-    languageCode: 'kn',
-    languageLabel: 'ಕನ್ನಡ (Kannada)'
+    languageCode: 'en',
+    languageLabel: 'English'
   });
 
   // App Stage: 'INTENT' -> 'SCHEME_MATCHED' -> 'CONSENT' -> 'INTERVIEW' -> 'CONFIRMATION' -> 'RIGHTS_CARD'
@@ -430,191 +430,201 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center p-3.5 sm:p-6 pb-28 selection:bg-orange-500 font-sans relative overflow-x-hidden">
-      {/* Decorative ambient background glows */}
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[720px] h-[340px] bg-gradient-to-b from-orange-500/10 via-amber-500/5 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="fixed bottom-0 right-0 w-[400px] h-[300px] bg-emerald-500/5 rounded-full blur-3xl pointer-events-none -z-10" />
+    <div className="min-h-screen bg-[#FDFBF7] text-slate-800 flex flex-col items-center selection:bg-emerald-600 selection:text-white font-sans">
+      {/* Top Official Government Portal Strip */}
+      <div className="w-full bg-[#1B4332] text-white border-b border-[#2D6A4F] px-4 py-2 flex flex-wrap items-center justify-between text-[11px] font-medium shadow-sm">
+        <div className="max-w-4xl mx-auto w-full flex items-center justify-between">
+          <div className="flex items-center gap-2 font-bold tracking-wide">
+            <span>🏛️ Government of India</span>
+            <span className="text-emerald-300">|</span>
+            <span className="text-emerald-200">Ministry of Housing & Urban Affairs (MoHUA)</span>
+          </div>
 
-      {/* Top Prototype Sandbox Notice Bar */}
-      <div className="w-full max-w-2xl bg-gradient-to-r from-amber-950/50 via-slate-900 to-amber-950/40 border border-amber-500/30 rounded-2xl px-4 py-2 mb-3 flex flex-wrap items-center justify-between text-xs text-amber-200 gap-2 shadow-soft-sm">
-        <span className="flex items-center gap-2 font-medium">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-          </span>
-          <strong className="text-amber-300">{t.sandboxNotice}</strong>
-        </span>
-        <span className="text-[10px] text-amber-400/90 font-mono bg-amber-950/80 px-2.5 py-0.5 rounded-full border border-amber-500/30 font-bold">
-          {t.zeroKeysBadge}
-        </span>
+          <div className="flex items-center gap-3 text-[11px] text-emerald-100">
+            <span className="hidden sm:inline">Official Welfare Portal Simulation</span>
+            <span className="px-2 py-0.5 rounded bg-emerald-800/80 border border-emerald-600 font-mono text-[10px] text-amber-300 font-bold">
+              PM SVANidhi 2026
+            </span>
+          </div>
+        </div>
       </div>
 
-      {/* Top Navbar */}
-      <header className="w-full max-w-2xl flex items-center justify-between py-3.5 border-b border-slate-800/80 mb-4.5">
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-orange-500 via-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/25 text-white font-black shrink-0">
-            <Shield className="w-6 h-6 stroke-[2.5]" />
+      <div className="w-full max-w-4xl px-3 sm:px-6 py-4 flex flex-col items-center">
+        {/* Top Navbar Header */}
+        <header className="w-full bg-white border border-slate-200 rounded-3xl p-4 sm:p-5 shadow-sm mb-5 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-700 to-teal-600 flex items-center justify-center shadow-md shadow-emerald-900/20 text-white font-black shrink-0">
+              <Shield className="w-7 h-7 stroke-[2.2]" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl font-black text-slate-900 tracking-tight">Kavach Vaani</h1>
+                <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                  Aapki Suraksha, Aapki Awaaz
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 font-medium">Multilingual Voice Companion for Street Vendors & Informal Workers</p>
+            </div>
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white">{t.appTitle}</h1>
-              <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/30">
+
+          {/* Quick Action Navigation Buttons */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowTrackerModal(true)}
+              className="px-3.5 py-2 rounded-xl bg-emerald-50 border border-emerald-300 hover:bg-emerald-100 text-emerald-800 transition-all text-xs font-bold flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
+            >
+              <Radio className="w-4 h-4 text-emerald-600" />
+              <span>Track Status</span>
+            </button>
+
+            <button
+              onClick={() => setShowHelpModal(true)}
+              className="p-2 sm:px-3 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 transition-all text-xs font-bold flex items-center gap-1.5 active:scale-95 cursor-pointer"
+            >
+              <HelpCircle className="w-4 h-4 text-slate-600" />
+              <span className="hidden sm:inline">{t.howItWorks}</span>
+            </button>
+
+            <button
+              onClick={handleReset}
+              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-600 hover:text-slate-900 transition-all active:scale-95 cursor-pointer"
+              title={t.resetConversation}
+            >
+              <RefreshCw className="w-4 h-4" />
+            </button>
+          </div>
+        </header>
+
+        {/* Hero Welcome Banner */}
+        <div className="w-full bg-gradient-to-r from-emerald-50 via-teal-50 to-amber-50 border border-emerald-200 rounded-3xl p-6 sm:p-7 shadow-sm mb-5 text-center relative overflow-hidden">
+          <div className="max-w-2xl mx-auto">
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300">
+              Empowering Street Vendors & Informal Workers
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mt-2.5">
+              Welcome to Kavach Vaani!
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 font-medium mt-1.5 leading-relaxed">
+              I am here to help you understand government schemes like <strong>PM SVANidhi</strong>, understand your statutory vendor rights, and guide your loan application.
+            </p>
+          </div>
+        </div>
+
+        {/* 5-Step Progress Guide Rail */}
+        <div className="w-full bg-white p-2.5 rounded-2xl border border-slate-200 flex items-center justify-between text-xs font-bold overflow-x-auto shadow-sm mb-5">
+          <span className={`px-3 py-1.5 rounded-xl whitespace-nowrap transition-all ${stage === 'INTENT' ? 'bg-emerald-700 text-white shadow-sm' : 'text-slate-400'}`}>
+            1. {t.steps.speakNeed}
+          </span>
+          <span className="text-slate-300 px-1 font-bold">➔</span>
+          <span className={`px-3 py-1.5 rounded-xl whitespace-nowrap transition-all ${stage === 'SCHEME_MATCHED' ? 'bg-emerald-700 text-white shadow-sm' : 'text-slate-400'}`}>
+            2. {t.steps.schemeMatch}
+          </span>
+          <span className="text-slate-300 px-1 font-bold">➔</span>
+          <span className={`px-3 py-1.5 rounded-xl whitespace-nowrap transition-all ${stage === 'CONSENT' ? 'bg-emerald-700 text-white shadow-sm' : 'text-slate-400'}`}>
+            3. {t.steps.consentCheck}
+          </span>
+          <span className="text-slate-300 px-1 font-bold">➔</span>
+          <span className={`px-3 py-1.5 rounded-xl whitespace-nowrap transition-all ${(stage === 'INTERVIEW' || stage === 'CONFIRMATION') ? 'bg-emerald-700 text-white shadow-sm' : 'text-slate-400'}`}>
+            4. {t.steps.details}
+          </span>
+          <span className="text-slate-300 px-1 font-bold">➔</span>
+          <span className={`px-3 py-1.5 rounded-xl whitespace-nowrap transition-all ${stage === 'RIGHTS_CARD' ? 'bg-emerald-700 text-white shadow-sm' : 'text-slate-400'}`}>
+            5. {t.steps.rightsCard}
+          </span>
+        </div>
+
+        {/* Language Selector: English -> Hindi -> Kannada -> Tamil -> Bengali */}
+        <div className="w-full mb-5">
+          <LanguageSelector
+            currentLanguage={selectedLanguage}
+            onSelect={handleLanguageChange}
+            disabled={isListening || isSpeaking}
+            t={t}
+          />
+        </div>
+
+        {/* Main Content Body */}
+        <main className="w-full flex flex-col gap-5">
+          {/* Main Voice Assistant Card */}
+          <div className="w-full bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 shadow-sm relative overflow-hidden">
+            <div className="flex items-center justify-between text-xs text-slate-500 mb-2 border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2">
+                <span className={`w-2.5 h-2.5 rounded-full ${isSpeaking ? 'bg-emerald-500 animate-pulse' : isListening ? 'bg-orange-500 animate-ping' : 'bg-slate-400'}`} />
+                <span className="font-bold text-slate-700">
+                  {playbackState.isPlaying
+                    ? `${t.voiceEngine.speakingSystem} (${selectedLanguage.nativeLabel})`
+                    : t.voiceEngine.empatheticEngine}
+                </span>
+              </div>
+              <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
                 {selectedLanguage.nativeLabel}
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 font-medium">{t.appSubtitle}</p>
-          </div>
-        </div>
 
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          <button
-            onClick={() => setShowTrackerModal(true)}
-            className="p-2 sm:px-3 rounded-xl bg-orange-950/40 border border-orange-500/40 hover:border-orange-500 text-orange-300 hover:text-white transition-all text-xs flex items-center gap-1.5 active:scale-95"
-            title="Track Government Application Status"
-          >
-            <Radio className="w-4 h-4 text-orange-400" />
-            <span className="hidden sm:inline text-[11px] font-semibold">Track Status</span>
-          </button>
+            {/* Central Mic Visualizer */}
+            <VoiceVisualizer
+              isListening={isListening}
+              isSpeaking={isSpeaking}
+              onClick={handleMicToggle}
+              statusLabel={statusMessage}
+            />
 
-          <button
-            onClick={() => setShowHelpModal(true)}
-            className="p-2 sm:px-3 rounded-xl bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 transition-all text-xs flex items-center gap-1.5 active:scale-95 cursor-pointer shadow-soft-sm"
-            title="How to Use & Journey Flow"
-          >
-            <HelpCircle className="w-4 h-4 text-orange-400" />
-            <span className="hidden sm:inline text-[11px] font-bold">{t.howItWorks}</span>
-          </button>
+            {/* Spoken Transcript Bubble */}
+            {spokenTranscript && (
+              <div className="mt-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-800 shadow-sm">
+                <div className="text-[10px] uppercase font-bold text-emerald-700 mb-1 flex items-center gap-1.5 tracking-wider">
+                  <Volume2 className="w-3.5 h-3.5" /> {t.voiceEngine.whatWeHeard}
+                </div>
+                <p className="text-sm font-semibold leading-relaxed italic text-slate-900">"{spokenTranscript}"</p>
+              </div>
+            )}
 
-          <button
-            onClick={() => setShowKeyModal(true)}
-            className="p-2 sm:px-3 rounded-xl bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 transition-all text-xs flex items-center gap-1.5 active:scale-95 cursor-pointer shadow-soft-sm"
-            title="Zero-Key Guarantee"
-          >
-            <Key className="w-4 h-4 text-amber-400" />
-            <span className="hidden sm:inline text-[11px] font-bold">{t.zeroKeyMode}</span>
-          </button>
+            {/* Quick Access Preset Cards */}
+            {stage === 'INTENT' && (
+              <div className="mt-6 pt-5 border-t border-slate-100">
+                <div className="flex items-center justify-center mb-3">
+                  <span className="px-3 py-1 rounded-full bg-emerald-800 text-white font-bold text-xs tracking-wide">
+                    Quick Access / ಒಂದು ಕ್ಲಿಕ್ ಪರಿಶೀಲನೆ
+                  </span>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <button
+                    onClick={() => handleQuickDemoTrigger('street-vendor')}
+                    className="p-3.5 rounded-2xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-left transition-all active:scale-95 cursor-pointer shadow-sm flex items-center justify-between"
+                  >
+                    <div>
+                      <div className="text-xs font-bold text-slate-900">Tea Stall Vendor</div>
+                      <div className="text-[11px] text-amber-800 font-medium">PM SVANidhi Loan</div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-amber-700" />
+                  </button>
 
-          <button
-            onClick={handleReset}
-            className="p-2 sm:p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 transition-all active:scale-95 cursor-pointer shadow-soft-sm"
-            title={t.resetConversation}
-          >
-            <RefreshCw className="w-4 h-4" />
-          </button>
-        </div>
-      </header>
+                  <button
+                    onClick={() => handleQuickDemoTrigger('accident')}
+                    className="p-3.5 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-left transition-all active:scale-95 cursor-pointer shadow-sm flex items-center justify-between"
+                  >
+                    <div>
+                      <div className="text-xs font-bold text-slate-900">Rickshaw Driver</div>
+                      <div className="text-[11px] text-emerald-800 font-medium">Fracture / PM-JAY</div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-emerald-700" />
+                  </button>
 
-      {/* Main Container */}
-      <main className="w-full max-w-2xl flex flex-col gap-5">
-        {/* Step Indicator Progress Bar */}
-        <div className="w-full bg-slate-900/80 p-2 sm:p-2.5 rounded-2xl border border-slate-800/80 flex items-center justify-between text-[11px] overflow-x-auto shadow-soft-sm">
-          <span className={`px-2.5 py-1 rounded-xl font-extrabold whitespace-nowrap transition-all duration-200 ${stage === 'INTENT' ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20' : 'text-slate-500'}`}>
-            {t.steps.speakNeed}
-          </span>
-          <span className="text-slate-700 px-1 font-bold">➔</span>
-          <span className={`px-2.5 py-1 rounded-xl font-extrabold whitespace-nowrap transition-all duration-200 ${stage === 'SCHEME_MATCHED' ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20' : 'text-slate-500'}`}>
-            {t.steps.schemeMatch}
-          </span>
-          <span className="text-slate-700 px-1 font-bold">➔</span>
-          <span className={`px-2.5 py-1 rounded-xl font-extrabold whitespace-nowrap transition-all duration-200 ${stage === 'CONSENT' ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20' : 'text-slate-500'}`}>
-            {t.steps.consentCheck}
-          </span>
-          <span className="text-slate-700 px-1 font-bold">➔</span>
-          <span className={`px-2.5 py-1 rounded-xl font-extrabold whitespace-nowrap transition-all duration-200 ${(stage === 'INTERVIEW' || stage === 'CONFIRMATION') ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20' : 'text-slate-500'}`}>
-            {t.steps.details}
-          </span>
-          <span className="text-slate-700 px-1 font-bold">➔</span>
-          <span className={`px-2.5 py-1 rounded-xl font-extrabold whitespace-nowrap transition-all duration-200 ${stage === 'RIGHTS_CARD' ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20' : 'text-slate-500'}`}>
-            {t.steps.rightsCard}
-          </span>
-        </div>
-
-        {/* Dialect Selector */}
-        <LanguageSelector
-          currentLanguage={selectedLanguage}
-          onSelect={handleLanguageChange}
-          disabled={isListening || isSpeaking}
-          t={t}
-        />
-
-        {/* Live Audio Interaction Hero Card */}
-        <div className="bg-gradient-to-b from-slate-900/95 via-slate-900 to-slate-950 border border-slate-800/90 rounded-3xl p-6 sm:p-7 shadow-soft-lg relative overflow-hidden backdrop-blur-xl">
-          {/* Header Tagline Callout */}
-          <div className="mb-4 text-center">
-            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight bg-gradient-to-r from-orange-400 via-amber-300 to-white bg-clip-text text-transparent">
-              "{t.tagline}"
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-lg mx-auto font-medium leading-relaxed">
-              {t.supportingText}
-            </p>
-          </div>
-
-          <div className="flex items-center justify-between text-xs text-slate-400 mb-2 border-t border-slate-800/80 pt-3.5">
-            <div className="flex items-center gap-2">
-              <span className={`w-2.5 h-2.5 rounded-full ${isSpeaking ? 'bg-emerald-400 animate-pulse' : isListening ? 'bg-orange-400 animate-ping' : 'bg-slate-500'}`} />
-              <span className="font-bold text-slate-300">
-                {playbackState.isPlaying
-                  ? playbackState.source === 'bundled_audio'
-                    ? `${t.voiceEngine.playingBundled} (${playbackState.languageLabel})`
-                    : `${t.voiceEngine.speakingSystem} (${playbackState.languageLabel})`
-                  : t.voiceEngine.empatheticEngine}
-              </span>
-            </div>
-            {playbackState.isPlaying && (
-              <span className="text-[10px] px-3 py-1 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500/40 flex items-center gap-1 font-mono font-extrabold shadow-sm">
-                <Radio className="w-3 h-3 text-emerald-400 animate-pulse" />
-                {playbackState.source === 'bundled_audio' ? t.voiceEngine.offlineRecording : t.voiceEngine.systemTts}
-              </span>
+                  <button
+                    onClick={() => handleQuickDemoTrigger('construction')}
+                    className="p-3.5 rounded-2xl bg-blue-50 hover:bg-blue-100 border border-blue-200 text-left transition-all active:scale-95 cursor-pointer shadow-sm flex items-center justify-between"
+                  >
+                    <div>
+                      <div className="text-xs font-bold text-slate-900">Construction Laborer</div>
+                      <div className="text-[11px] text-blue-800 font-medium">BOCW Welfare</div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-blue-700" />
+                  </button>
+                </div>
+              </div>
             )}
           </div>
-
-          {/* Big Mic & Soundwaves */}
-          <VoiceVisualizer
-            isListening={isListening}
-            isSpeaking={isSpeaking}
-            onClick={handleMicToggle}
-            statusLabel={statusMessage}
-          />
-
-          {/* Spoken Transcript Bubble */}
-          {spokenTranscript && (
-            <div className="mt-4 p-4 rounded-2xl bg-black/50 border border-slate-800 text-xs text-slate-200 shadow-inner">
-              <div className="text-[10px] uppercase font-extrabold text-orange-400 mb-1 flex items-center gap-1.5 tracking-wider">
-                <Volume2 className="w-3.5 h-3.5" /> {t.voiceEngine.whatWeHeard}
-              </div>
-              <p className="text-sm font-semibold leading-relaxed italic text-white">"{spokenTranscript}"</p>
-            </div>
-          )}
-
-          {/* Quick Demo Voice Prompts for Evaluators */}
-          {stage === 'INTENT' && (
-            <div className="mt-5 pt-4 border-t border-slate-800/80">
-              <span className="text-[11px] font-bold text-slate-400 block mb-2.5 uppercase tracking-wider">
-                {t.scenarios.orTestPresets}
-              </span>
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => handleQuickDemoTrigger('street-vendor')}
-                  className="px-3.5 py-2 rounded-xl bg-orange-950/40 hover:bg-orange-900/60 border border-orange-500/30 text-orange-200 text-xs font-semibold transition-all active:scale-95 cursor-pointer shadow-soft-sm"
-                >
-                  {t.scenarios.teaVendor}
-                </button>
-                <button
-                  onClick={() => handleQuickDemoTrigger('accident')}
-                  className="px-3.5 py-2 rounded-xl bg-blue-950/40 hover:bg-blue-900/60 border border-blue-500/30 text-blue-200 text-xs font-semibold transition-all active:scale-95 cursor-pointer shadow-soft-sm"
-                >
-                  {t.scenarios.autoDriver}
-                </button>
-                <button
-                  onClick={() => handleQuickDemoTrigger('construction')}
-                  className="px-3.5 py-2 rounded-xl bg-amber-950/40 hover:bg-amber-900/60 border border-amber-500/30 text-amber-200 text-xs font-semibold transition-all active:scale-95 cursor-pointer shadow-soft-sm"
-                >
-                  {t.scenarios.constructionWorker}
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
 
         {/* STAGE 1: Matched Scheme Card */}
         {stage === 'SCHEME_MATCHED' && matchedScheme && (
@@ -740,6 +750,7 @@ export function App() {
           </div>
         )}
       </main>
+      </div>
 
       {/* How it Works / Instructions Modal */}
       {showHelpModal && (

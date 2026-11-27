@@ -10,6 +10,14 @@ interface LanguageSelectorProps {
   t: LocaleTranslations;
 }
 
+const LANGUAGE_ICONS: Record<string, { iconText: string; colorClass: string }> = {
+  en: { iconText: 'A', colorClass: 'bg-blue-50 text-blue-700 border-blue-200' },
+  hi: { iconText: 'अ', colorClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+  kn: { iconText: 'ಅ', colorClass: 'bg-orange-50 text-orange-700 border-orange-200' },
+  ta: { iconText: 'அ', colorClass: 'bg-amber-50 text-amber-700 border-amber-200' },
+  bn: { iconText: 'অ', colorClass: 'bg-teal-50 text-teal-700 border-teal-200' }
+};
+
 export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   currentLanguage,
   onSelect,
@@ -18,28 +26,23 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
 }) => {
   return (
     <div className="w-full" role="region" aria-label="Language selection">
-      <div className="flex items-center justify-between mb-2.5">
-        <label 
-          id="language-selector-label"
-          className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5"
-        >
-          <span className="p-1 rounded-md bg-orange-500/20 text-orange-400">
-            <Languages className="w-3.5 h-3.5" aria-hidden="true" />
-          </span>
-          {t.languageSelectLabel}
-        </label>
-        <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-gradient-to-r from-orange-950/70 to-amber-950/70 text-orange-300 border border-orange-500/30">
-          {t.regionalAudioBadge}
+      {/* Centered Pill Badge for "Choose Your Language" */}
+      <div className="flex items-center justify-center mb-3">
+        <span className="px-4 py-1 rounded-full bg-emerald-800 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 tracking-wide">
+          <Languages className="w-3.5 h-3.5" />
+          Choose Your Language / ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ
         </span>
       </div>
 
       <div 
-        className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-2.5"
+        className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 sm:gap-3"
         role="radiogroup"
         aria-labelledby="language-selector-label"
       >
         {SUPPORTED_LANGUAGES.map((lang) => {
           const isSelected = currentLanguage.code === lang.code;
+          const badge = LANGUAGE_ICONS[lang.code] || { iconText: 'आ', colorClass: 'bg-slate-100 text-slate-700 border-slate-300' };
+
           return (
             <button
               key={lang.code}
@@ -47,26 +50,28 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
               aria-checked={isSelected}
               disabled={disabled}
               onClick={() => onSelect(lang)}
-              className={`relative p-3 rounded-2xl text-left transition-all duration-200 border focus:outline-none focus:ring-2 focus:ring-orange-400 ${
+              className={`relative p-3 rounded-2xl text-left transition-all duration-200 border flex items-center gap-2.5 shadow-sm ${
                 isSelected
-                  ? 'bg-gradient-to-br from-slate-900 to-slate-900/90 border-orange-500 text-white shadow-soft-md shadow-orange-500/10 ring-1 ring-orange-400/50'
-                  : 'bg-slate-900/50 hover:bg-slate-900/80 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200'
+                  ? 'bg-white border-2 border-emerald-600 text-slate-900 shadow-md ring-2 ring-emerald-500/20'
+                  : 'bg-white/90 hover:bg-white border-slate-200 text-slate-600 hover:border-slate-300 hover:text-slate-900'
               } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer active:scale-95'}`}
             >
-              <div className="flex items-center justify-between">
-                <div className="text-sm font-extrabold text-white truncate tracking-tight">{lang.nativeLabel}</div>
-                {isSelected && (
-                  <span className="w-4 h-4 rounded-full bg-orange-500 text-slate-950 flex items-center justify-center shrink-0">
-                    <Check className="w-2.5 h-2.5 stroke-[3]" />
-                  </span>
-                )}
+              {/* Circular Native Script Avatar (e.g. A, अ, ಅ, அ, অ) - NO FLAGS */}
+              <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm border shrink-0 ${badge.colorClass}`}>
+                {badge.iconText}
               </div>
-              <div className="text-[10px] font-medium text-slate-400 mt-0.5 truncate">{lang.label}</div>
 
-              {/* Subtle top indicator pip */}
-              {isSelected && (
-                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-6 h-1 rounded-full bg-gradient-to-r from-orange-500 to-amber-400 shadow-sm" />
-              )}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <div className="text-sm font-bold text-slate-900 truncate tracking-tight">{lang.nativeLabel.split(' ')[0]}</div>
+                  {isSelected && (
+                    <span className="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                      <Check className="w-2.5 h-2.5 stroke-[3]" />
+                    </span>
+                  )}
+                </div>
+                <div className="text-[11px] font-medium text-slate-500 truncate">({lang.label})</div>
+              </div>
             </button>
           );
         })}

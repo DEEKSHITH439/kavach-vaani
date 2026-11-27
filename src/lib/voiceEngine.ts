@@ -12,12 +12,12 @@ export interface VoiceOption {
 
 export const SUPPORTED_LANGUAGES: VoiceOption[] = [
   {
-    code: 'kn',
-    label: 'Kannada / Kanglish',
-    nativeLabel: 'ಕನ್ನಡ (Kannada)',
-    speechLang: 'kn-IN',
-    greetingText: 'ನಮಸ್ಕಾರ! ನಾನು ಕವಚ ವಾಣಿ. ನೀವು ಯಾವ ಕೆಲಸ ಮಾಡುತ್ತಿದ್ದೀರಿ ಮತ್ತು ನಿಮಗೆ ಯಾವ ರೀತಿಯ ಆರ್ಥಿಕ ಸಹಾಯ ಅಥವಾ ದುಡಿಯುವ ಬಂಡವಾಳ ಸಾಲ ಬೇಕು ಎಂದು ತಿಳಿಸಿ.',
-    samplePrompt: 'ನಾನು ಬೆಂಗಳೂರಿನಲ್ಲಿ ಚಹಾ ಅಂಗಡಿ ನಡೆಸುತ್ತಿದ್ದೇನೆ, ₹15,000 ಸಾಲ ಬೇಕು.'
+    code: 'en',
+    label: 'English',
+    nativeLabel: 'English',
+    speechLang: 'en-IN',
+    greetingText: 'Namaste! I am Kavach Vaani. Tell me what work you do and what kind of financial assistance or working-capital loan you need.',
+    samplePrompt: 'I run a tea stall in Bengaluru and need a 15,000 rupees working capital loan.'
   },
   {
     code: 'hi',
@@ -28,12 +28,12 @@ export const SUPPORTED_LANGUAGES: VoiceOption[] = [
     samplePrompt: 'मैं लखनऊ में चाय का ठेला लगाता हूँ, ₹15,000 का लोन चाहिए।'
   },
   {
-    code: 'en',
-    label: 'Indian English',
-    nativeLabel: 'English (India)',
-    speechLang: 'en-IN',
-    greetingText: 'Namaste! I am Kavach Vaani. Tell me what work you do and what kind of financial assistance or working-capital loan you need.',
-    samplePrompt: 'I run a tea stall in Bengaluru and need a 15,000 rupees working capital loan.'
+    code: 'kn',
+    label: 'Kannada / Kanglish',
+    nativeLabel: 'ಕನ್ನಡ (Kannada)',
+    speechLang: 'kn-IN',
+    greetingText: 'ನಮಸ್ಕಾರ! ನಾನು ಕವಚ ವಾಣಿ. ನೀವು ಯಾವ ಕೆಲಸ ಮಾಡುತ್ತಿದ್ದೀರಿ ಮತ್ತು ನಿಮಗೆ ಯಾವ ರೀತಿಯ ಆರ್ಥಿಕ ಸಹಾಯ ಅಥವಾ ದುಡಿಯುವ ಬಂಡವಾಳ ಸಾಲ ಬೇಕು ಎಂದು ತಿಳಿಸಿ.',
+    samplePrompt: 'ನಾನು ಬೆಂಗಳೂರಿನಲ್ಲಿ ಚಹಾ ಅಂಗಡಿ ನಡೆಸುತ್ತಿದ್ದೇನೆ, ₹15,000 ಸಾಲ ಬೇಕು.'
   },
   {
     code: 'ta',

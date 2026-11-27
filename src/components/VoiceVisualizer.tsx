@@ -36,16 +36,16 @@ export const VoiceVisualizer: React.FC<VoiceVisualizerProps> = ({
         {/* Outer ambient decorative ring */}
         <div className="absolute w-36 h-36 rounded-full bg-gradient-to-tr from-orange-400/20 via-amber-300/10 to-emerald-400/20 blur-md pointer-events-none" />
 
-        {/* Central Big Interactive Mic Button */}
+        {/* Central Big Interactive Mic Button with Official Emerald Glow */}
         <button
           onClick={onClick}
           aria-label={isListening ? "Stop listening" : isSpeaking ? "Stop speaking" : "Tap and speak"}
-          className={`relative z-10 w-28 h-28 sm:w-32 sm:h-32 rounded-full flex flex-col items-center justify-center transition-all duration-300 active:scale-95 cursor-pointer ${
+          className={`relative z-10 w-28 h-28 sm:w-32 sm:h-32 rounded-full flex flex-col items-center justify-center transition-all duration-300 active:scale-95 cursor-pointer shadow-lg ${
             isListening
-              ? 'bg-gradient-to-tr from-orange-600 via-amber-500 to-orange-500 text-white shadow-glow-saffron scale-105 ring-4 ring-orange-300/80 animate-pulse'
+              ? 'bg-gradient-to-tr from-orange-600 to-amber-500 text-white shadow-xl scale-105 ring-4 ring-orange-400 animate-pulse'
               : isSpeaking
-              ? 'bg-gradient-to-tr from-emerald-600 via-teal-500 to-emerald-500 text-white shadow-glow-green scale-105 ring-4 ring-emerald-300/80'
-              : 'bg-gradient-to-tr from-orange-500 via-amber-500 to-orange-600 hover:from-orange-600 hover:to-amber-600 text-white shadow-xl shadow-orange-500/25 hover:shadow-orange-500/40 hover:scale-102'
+              ? 'bg-gradient-to-tr from-emerald-700 to-teal-600 text-white shadow-xl scale-105 ring-4 ring-emerald-400'
+              : 'bg-emerald-700 hover:bg-emerald-800 text-white shadow-emerald-900/30 ring-4 ring-emerald-500/30 hover:scale-102'
           }`}
         >
           {isSpeaking ? (
@@ -53,26 +53,26 @@ export const VoiceVisualizer: React.FC<VoiceVisualizerProps> = ({
           ) : (
             <Mic className={`w-11 h-11 sm:w-12 sm:h-12 ${isListening ? 'animate-pulse' : ''} drop-shadow`} />
           )}
-          <span className="text-[11px] font-extrabold uppercase tracking-wider mt-1 text-white/95">
+          <span className="text-[11px] font-extrabold uppercase tracking-wider mt-1 text-white">
             {isListening ? 'Listening' : isSpeaking ? 'Speaking' : 'Tap & Speak'}
           </span>
         </button>
       </div>
 
-      {/* Visual rhythmic soundwave bars */}
-      <div className="h-9 flex items-center justify-center gap-1.5 mt-5 px-4 py-1.5 rounded-full bg-slate-900/60 dark:bg-slate-900/80 border border-slate-700/60 shadow-inner">
+      {/* Visual rhythmic soundwave bars (Clean Emerald Waveform) */}
+      <div className="h-9 flex items-center justify-center gap-1.5 mt-5 px-5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 shadow-sm">
         {[30, 65, 95, 50, 100, 75, 85, 40, 90, 35, 70, 45].map((h, i) => (
           <div
             key={i}
-            className={`w-1 rounded-full transition-all duration-150 ${
+            className={`w-1.5 rounded-full transition-all duration-150 ${
               isListening
-                ? 'bg-gradient-to-t from-orange-500 to-amber-400'
+                ? 'bg-orange-500'
                 : isSpeaking
-                ? 'bg-gradient-to-t from-emerald-500 to-teal-300'
-                : 'bg-slate-700/80'
+                ? 'bg-emerald-600'
+                : 'bg-emerald-300'
             }`}
             style={{
-              height: isListening || isSpeaking ? `${Math.max(18, (h * (isListening ? 0.95 : 0.75)))}%` : '6px',
+              height: isListening || isSpeaking ? `${Math.max(25, (h * (isListening ? 0.95 : 0.75)))}%` : '8px',
               animationDuration: `${0.5 + (i * 0.08)}s`
             }}
           />
@@ -80,7 +80,7 @@ export const VoiceVisualizer: React.FC<VoiceVisualizerProps> = ({
       </div>
 
       {/* Spoken Status pill label */}
-      <div className="mt-3 px-4 py-1.5 rounded-full bg-slate-900/40 border border-slate-800 text-xs sm:text-sm font-medium text-slate-200 text-center max-w-sm shadow-sm">
+      <div className="mt-3 px-5 py-1.5 rounded-full bg-white border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 text-center max-w-sm shadow-sm">
         {statusLabel}
       </div>
     </div>
