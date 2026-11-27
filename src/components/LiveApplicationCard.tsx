@@ -33,17 +33,17 @@ export const LiveApplicationCard: React.FC<LiveApplicationCardProps> = ({
   ];
 
   return (
-    <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-soft-lg backdrop-blur-xl">
+    <div className="bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 shadow-sm">
       {/* Card Header */}
-      <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+      <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
         <div>
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-orange-400">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
             {t.interview.formTitle}
           </span>
-          <h4 className="text-sm font-black text-white">{schemeName}</h4>
+          <h4 className="text-base font-black text-slate-900 mt-1">{schemeName}</h4>
         </div>
-        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-950/60 border border-orange-500/30 text-[11px] font-extrabold text-orange-300 shadow-sm">
-          <Clock className="w-3.5 h-3.5 animate-spin text-orange-400" />
+        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-300 text-[11px] font-extrabold text-emerald-800 shadow-sm">
+          <Clock className="w-3.5 h-3.5 animate-spin text-emerald-600" />
           <span>{t.interview.stepCounter(Math.min(currentStep + 1, 6), 6)}</span>
         </div>
       </div>
@@ -58,40 +58,40 @@ export const LiveApplicationCard: React.FC<LiveApplicationCardProps> = ({
           return (
             <div
               key={idx}
-              className={`p-3 sm:p-3.5 rounded-2xl flex items-center justify-between transition-all duration-200 border ${
+              className={`p-3.5 rounded-2xl flex items-center justify-between transition-all duration-200 border ${
                 isCurrent
-                  ? 'bg-orange-500/10 border-orange-500/60 shadow-glow-saffron ring-1 ring-orange-500/40'
+                  ? 'bg-emerald-50/80 border-2 border-emerald-600 shadow-sm ring-2 ring-emerald-500/20'
                   : isFilled
-                  ? 'bg-slate-800/50 border-emerald-500/30 text-white'
-                  : 'bg-slate-950/40 border-slate-800/80 text-slate-500'
+                  ? 'bg-slate-50/80 border-slate-200 text-slate-900'
+                  : 'bg-white border-slate-100 text-slate-400'
               }`}
             >
               <div className="flex items-center gap-3">
                 <div
                   className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 shadow-sm ${
                     isCurrent
-                      ? 'bg-orange-500 text-slate-950 font-black'
+                      ? 'bg-emerald-700 text-white font-black'
                       : isFilled
-                      ? 'bg-emerald-500/20 text-emerald-400'
-                      : 'bg-slate-800 text-slate-500'
+                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                      : 'bg-slate-100 text-slate-400 border border-slate-200'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[11px] font-semibold text-slate-400">{s.label}</div>
-                  <div className="text-sm font-bold text-white tracking-tight">
-                    {s.value || (isCurrent ? <span className="text-orange-400 text-xs italic font-medium animate-pulse">{t.interview.awaitingVoice}</span> : <span className="text-slate-600 text-xs">—</span>)}
+                  <div className="text-[11px] font-semibold text-slate-500">{s.label}</div>
+                  <div className="text-sm font-bold text-slate-900 tracking-tight">
+                    {s.value || (isCurrent ? <span className="text-emerald-700 text-xs italic font-semibold animate-pulse">{t.interview.awaitingVoice}</span> : <span className="text-slate-300 text-xs">—</span>)}
                   </div>
                 </div>
               </div>
 
               {isFilled ? (
-                <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <div className="w-6 h-6 rounded-full bg-emerald-100 border border-emerald-300 flex items-center justify-center shrink-0">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-700" />
                 </div>
               ) : isCurrent ? (
-                <div className="w-2.5 h-2.5 rounded-full bg-orange-400 animate-ping mr-2" />
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-ping mr-2" />
               ) : null}
             </div>
           );

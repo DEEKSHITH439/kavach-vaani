@@ -441,10 +441,10 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-slate-800 flex flex-col items-center selection:bg-emerald-600 selection:text-white font-sans">
+    <div className="min-h-screen bg-[#FDFBF7] text-slate-800 flex flex-col items-center selection:bg-emerald-600 selection:text-white font-sans w-full">
       {/* Top Official Government Portal Strip */}
       <div className="w-full bg-[#1B4332] text-white border-b border-[#2D6A4F] px-4 py-2 flex flex-wrap items-center justify-between text-[11px] font-medium shadow-sm">
-        <div className="max-w-4xl mx-auto w-full flex items-center justify-between">
+        <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
           <div className="flex items-center gap-2 font-bold tracking-wide">
             <span>🏛️ Government of India</span>
             <span className="text-emerald-300">|</span>
@@ -460,7 +460,7 @@ export function App() {
         </div>
       </div>
 
-      <div className="w-full max-w-4xl px-3 sm:px-6 py-4 flex flex-col items-center">
+      <div className="w-full max-w-7xl px-3 sm:px-6 lg:px-8 py-4 flex flex-col items-center">
         {/* Top Navbar Header */}
         <header className="w-full bg-white border border-slate-200 rounded-3xl p-4 sm:p-5 shadow-sm mb-5 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3.5">
@@ -645,16 +645,28 @@ export function App() {
             <div className="lg:col-span-7 w-full space-y-5">
               {/* STAGE 0: Waiting for user to speak */}
               {stage === 'INTENT' && (
-                <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm text-center">
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center mx-auto mb-3 font-bold">
+                <div className="bg-white border border-slate-200 rounded-3xl p-7 shadow-sm text-center">
+                  <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center justify-center mx-auto mb-4 font-bold text-xl">
                     1
                   </div>
-                  <h3 className="text-base font-bold text-slate-900 mb-1">
+                  <h3 className="text-lg font-black text-slate-900 mb-2">
                     {t.steps.speakNeed}
                   </h3>
-                  <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
+                  <p className="text-sm text-slate-500 max-w-md mx-auto leading-relaxed mb-6">
                     {t.voiceEngine.tapMicToSpeak}
                   </p>
+
+                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 max-w-md mx-auto text-left">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-2">
+                      💡 Quick Example Queries / ಉದಾಹರಣೆಗಳು:
+                    </span>
+                    <ul className="text-xs text-slate-600 space-y-1.5 list-disc list-inside">
+                      <li>"I sell tea and need ₹15,000 working capital loan"</li>
+                      <li>"ನಾನು ಬೀದಿ ವ್ಯಾಪಾರಿ, ನನಗೆ ವ್ಯಾಪಾರಕ್ಕೆ ಸಾಲ ಬೇಕು"</li>
+                      <li>"मैं ठेला लगाता हूँ, मुझे ₹15,000 का सरकारी लोन चाहिए"</li>
+                      <li>"నేను టీ దుకాణం నడుపుతున్నాను, వ్యాపార రుణం కావాలి"</li>
+                    </ul>
+                  </div>
                 </div>
               )}
 
