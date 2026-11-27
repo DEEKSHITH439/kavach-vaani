@@ -344,6 +344,13 @@ export function App() {
   const finalizeApplication = () => {
     const newId = `KV-DEMO-${Math.floor(100000 + Math.random() * 900000)}`;
     setApplicationId(newId);
+    
+    // Fallback ensure matchedScheme is never null so Rights Card always renders
+    const activeScheme = matchedScheme || SCHEMES_DATABASE[0];
+    if (!matchedScheme) {
+      setMatchedScheme(activeScheme);
+    }
+    
     setStage('RIGHTS_CARD');
 
     try {
@@ -352,8 +359,16 @@ export function App() {
       // ignore
     }
 
-    const rightsCardSpeech = matchedScheme?.legalRightsAudioText[selectedLanguage.code] || matchedScheme?.legalRightsAudioText['en'] || approvedScripts.schemeExplanation.en;
+    const rightsCardSpeech = activeScheme.legalRightsAudioText[selectedLanguage.code] || activeScheme.legalRightsAudioText['en'] || approvedScripts.schemeExplanation.en;
     speakResponse(rightsCardSpeech, 'rights_card');
+
+    // Smoothly scroll down so the user immediately sees the generated Rights Card below the hero
+    setTimeout(() => {
+      const rightsElement = document.getElementById('audio-rights-card-section');
+      if (rightsElement) {
+        rightsElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 200);
   };
 
   const handleReset = () => {
@@ -661,17 +676,20 @@ export function App() {
         )}
 
         {/* STAGE 4: Final Audio Rights Card & PDF Generator */}
-        {stage === 'RIGHTS_CARD' && matchedScheme && (
-          <AudioRightsCard
-            scheme={matchedScheme}
-            formData={submissionPayload}
-            languageCode={selectedLanguage.code}
-            isPlayingNote={isSpeaking}
-            onPlayVoiceNote={() => {
-              const audioText = matchedScheme.legalRightsAudioText[selectedLanguage.code] || matchedScheme.legalRightsAudioText['en'];
-              speakResponse(audioText, 'rights_card');
-            }}
-          />
+        {stage === 'RIGHTS_CARD' && (
+          <div id="audio-rights-card-section" className="scroll-mt-6 animate-fade-in">
+            <AudioRightsCard
+              scheme={matchedScheme || SCHEMES_DATABASE[0]}
+              formData={submissionPayload}
+              languageCode={selectedLanguage.code}
+              isPlayingNote={isSpeaking}
+              onPlayVoiceNote={() => {
+                const currentScheme = matchedScheme || SCHEMES_DATABASE[0];
+                const audioText = currentScheme.legalRightsAudioText[selectedLanguage.code] || currentScheme.legalRightsAudioText['en'];
+                speakResponse(audioText, 'rights_card');
+              }}
+            />
+          </div>
         )}
       </main>
 
