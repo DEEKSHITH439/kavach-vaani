@@ -58,6 +58,7 @@ export const SCHEMES_DATABASE: Scheme[] = [
       kn: 'ಪಿಎಂ ಸ್ವನಿಧಿ (ಬೀದಿ ವ್ಯಾಪಾರಿಗಳ ಸ್ವಾವಲಂಬನೆ ನಿಧಿ)',
       hi: 'पीएम स्वनिधि (प्रधानमंत्री स्ट्रीट वेंडर आत्मनिर्भर निधि)',
       ta: 'பிஎம் ஸ்வநிதி (தெருவோர வியாபாரிகள் தற்சார்பு நிதி)',
+      te: 'పీఎం స్వనిధి (స్ట్రీట్ వెండర్స్ ఆత్మనిర్భర్ నిధి)',
       bn: 'পিএম স্বনিধি (প্রধানমন্ত্রী স্ট্রিট ভেন্ডর আত্মনির্ভর নিধি)'
     },
     category: 'street-vendor',
@@ -457,13 +458,15 @@ export function matchSchemeByIntent(userSpokenText: string, lang = 'hi'): {
     text.includes('loan') || text.includes('karz') || text.includes('sala') || text.includes('saala') || 
     text.includes('kadan') || text.includes('capital') || text.includes('money') || text.includes('paisa') || 
     text.includes('rokkha') || text.includes('duddu') || text.includes('ಬಂಡವಾಳ') || text.includes('ಸಾಲ') ||
+    text.includes('రుణం') || text.includes('అప్పు') || text.includes('పైసలు') ||
     text.includes('ऋण') || text.includes('लोन') || text.includes('पूंजी') || text.includes('கடன்') || text.includes('ঋণ')
   ) {
     entities.need = 'Working Capital / Business Loan';
   } else if (
     text.includes('hospital') || text.includes('fracture') || text.includes('bimari') || text.includes('illness') || 
     text.includes('treatment') || text.includes('medical') || text.includes('chikitsa') || text.includes('maruthuvam') ||
-    text.includes('ಆಸ್ಪತ್ರೆ') || text.includes('ಚಿಕಿತ್ಸೆ') || text.includes('ಇಲಾಜು') ||
+    text.includes('ఆస్పತ್ರೆ') || text.includes('ಚಿಕಿತ್ಸೆ') || text.includes('ಇಲಾಜು') ||
+    text.includes('ఆసుపత్రి') || text.includes('చికిత్స') ||
     text.includes('अस्पताल') || text.includes('इलाज') || text.includes('बीमारी') ||
     text.includes('மருத்துவமனை') || text.includes('சிகிச்சை') ||
     text.includes('হাসপাতাল') || text.includes('চিকিৎসা')
@@ -492,7 +495,8 @@ export function matchSchemeByIntent(userSpokenText: string, lang = 'hi'): {
   if (
     entities.occupation === 'Construction Worker' || 
     text.includes('building') || text.includes('mazdoor') || text.includes('cement') ||
-    text.includes('ಕಟ್ಟಡ') || text.includes('निर्माण') || text.includes('கட்டுமான') || text.includes('নির্মাণ')
+    text.includes('ಕಟ್ಟಡ') || text.includes('निर्माण') || text.includes('கட்டுமான') || text.includes('নির্মাণ') ||
+    text.includes('భవన') || text.includes('నిర్మాణ')
   ) {
     return {
       scheme: SCHEMES_DATABASE[3], // BOCW
@@ -505,7 +509,8 @@ export function matchSchemeByIntent(userSpokenText: string, lang = 'hi'): {
     entities.occupation === 'Street Vendor / Hawker' || 
     entities.need === 'Working Capital / Business Loan' || 
     text.includes('loan') || text.includes('stall') || text.includes('chai') || text.includes('15000') ||
-    text.includes('ಬೀದಿ') || text.includes('ठेला') || text.includes('தள்ளுவண்டி') || text.includes('হকার')
+    text.includes('ಬೀದಿ') || text.includes('ठेला') || text.includes('தள்ளுவண்டி') || text.includes('হকার') ||
+    text.includes('వీధి') || text.includes('బండి')
   ) {
     return {
       scheme: SCHEMES_DATABASE[0], // PM SVANidhi

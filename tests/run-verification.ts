@@ -21,8 +21,8 @@ function assert(condition: boolean, scenario: string, details: string) {
 console.log('=== KAVACH VAANI COMPREHENSIVE AUTOMATED VERIFICATION SUITE ===\n');
 
 // 1. Language Localization Verification
-console.log('1. Testing Language Localizations (5 Languages)...');
-const requiredLanguages = ['kn', 'hi', 'en', 'ta', 'bn'] as const;
+console.log('1. Testing Language Localizations (6 Languages: EN, HI, KN, TE, TA, BN)...');
+const requiredLanguages = ['en', 'hi', 'kn', 'te', 'ta', 'bn'] as const;
 for (const lang of requiredLanguages) {
   const loc = getLocale(lang);
   assert(Boolean(loc.tagline), `${lang}: Tagline present`, `Tagline: ${loc.tagline}`);

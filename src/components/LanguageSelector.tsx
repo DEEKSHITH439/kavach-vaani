@@ -14,6 +14,7 @@ const LANGUAGE_ICONS: Record<string, { iconText: string; colorClass: string }> =
   en: { iconText: 'A', colorClass: 'bg-blue-50 text-blue-700 border-blue-200' },
   hi: { iconText: 'अ', colorClass: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
   kn: { iconText: 'ಅ', colorClass: 'bg-orange-50 text-orange-700 border-orange-200' },
+  te: { iconText: 'అ', colorClass: 'bg-purple-50 text-purple-700 border-purple-200' },
   ta: { iconText: 'அ', colorClass: 'bg-amber-50 text-amber-700 border-amber-200' },
   bn: { iconText: 'অ', colorClass: 'bg-teal-50 text-teal-700 border-teal-200' }
 };
@@ -30,12 +31,12 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       <div className="flex items-center justify-center mb-3">
         <span className="px-4 py-1 rounded-full bg-emerald-800 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 tracking-wide">
           <Languages className="w-3.5 h-3.5" />
-          Choose Your Language / ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ
+          {t.languageSelectLabel}
         </span>
       </div>
 
       <div 
-        className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 sm:gap-3"
+        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-2.5"
         role="radiogroup"
         aria-labelledby="language-selector-label"
       >

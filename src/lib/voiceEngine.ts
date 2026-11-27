@@ -2,7 +2,7 @@
 // speed adjustment, voice detection, and audio feedback for Indian vernacular speech.
 
 export interface VoiceOption {
-  code: 'hi' | 'kn' | 'ta' | 'bn' | 'en';
+  code: 'en' | 'hi' | 'kn' | 'te' | 'ta' | 'bn';
   label: string;
   nativeLabel: string;
   speechLang: string;
@@ -34,6 +34,14 @@ export const SUPPORTED_LANGUAGES: VoiceOption[] = [
     speechLang: 'kn-IN',
     greetingText: 'ನಮಸ್ಕಾರ! ನಾನು ಕವಚ ವಾಣಿ. ನೀವು ಯಾವ ಕೆಲಸ ಮಾಡುತ್ತಿದ್ದೀರಿ ಮತ್ತು ನಿಮಗೆ ಯಾವ ರೀತಿಯ ಆರ್ಥಿಕ ಸಹಾಯ ಅಥವಾ ದುಡಿಯುವ ಬಂಡವಾಳ ಸಾಲ ಬೇಕು ಎಂದು ತಿಳಿಸಿ.',
     samplePrompt: 'ನಾನು ಬೆಂಗಳೂರಿನಲ್ಲಿ ಚಹಾ ಅಂಗಡಿ ನಡೆಸುತ್ತಿದ್ದೇನೆ, ₹15,000 ಸಾಲ ಬೇಕು.'
+  },
+  {
+    code: 'te',
+    label: 'Telugu',
+    nativeLabel: 'తెలుగు (Telugu)',
+    speechLang: 'te-IN',
+    greetingText: 'నమస్కారం! నేను కవచ్ వాణి. మీరు ఏ పని చేస్తున్నారు మరియు మీకు ఎటువంటి ఆర్థిక సహాయం లేదా వ్యాపార మూలధన రుణం కావాలో తెలియజేయండి.',
+    samplePrompt: 'నేను హైదరాబాద్‌లో టీ దుకాణం నడుపుతున్నాను, ₹15,000 వ్యాపార రుణం కావాలి.'
   },
   {
     code: 'ta',

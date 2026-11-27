@@ -495,17 +495,17 @@ export function App() {
           </div>
         </header>
 
-        {/* Hero Welcome Banner */}
+        {/* Hero Welcome Banner - Fully localized */}
         <div className="w-full bg-gradient-to-r from-emerald-50 via-teal-50 to-amber-50 border border-emerald-200 rounded-3xl p-6 sm:p-7 shadow-sm mb-5 text-center relative overflow-hidden">
           <div className="max-w-2xl mx-auto">
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300">
-              Empowering Street Vendors & Informal Workers
+              {t.tagline}
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mt-2.5">
-              Welcome to Kavach Vaani!
+              {selectedLanguage.code === 'kn' ? 'ಕವಚ ವಾಣಿಗೆ ಸ್ವಾಗತ!' : selectedLanguage.code === 'hi' ? 'कवच वाणी में आपका स्वागत है!' : selectedLanguage.code === 'te' ? 'కవచ్ వాణికి స్వాగతం!' : selectedLanguage.code === 'ta' ? 'கவச் வாணிக்கு நல்வரவு!' : selectedLanguage.code === 'bn' ? 'কবচ বাণীতে আপনাকে স্বাগতম!' : 'Welcome to Kavach Vaani!'}
             </h2>
             <p className="text-sm sm:text-base text-slate-600 font-medium mt-1.5 leading-relaxed">
-              I am here to help you understand government schemes like <strong>PM SVANidhi</strong>, understand your statutory vendor rights, and guide your loan application.
+              {t.supportingText}
             </p>
           </div>
         </div>
@@ -543,213 +543,236 @@ export function App() {
           />
         </div>
 
-        {/* Main Content Body */}
-        <main className="w-full flex flex-col gap-5">
-          {/* Main Voice Assistant Card */}
-          <div className="w-full bg-white border border-slate-200 rounded-3xl p-6 sm:p-7 shadow-sm relative overflow-hidden">
-            <div className="flex items-center justify-between text-xs text-slate-500 mb-2 border-b border-slate-100 pb-3">
-              <div className="flex items-center gap-2">
-                <span className={`w-2.5 h-2.5 rounded-full ${isSpeaking ? 'bg-emerald-500 animate-pulse' : isListening ? 'bg-orange-500 animate-ping' : 'bg-slate-400'}`} />
-                <span className="font-bold text-slate-700">
-                  {playbackState.isPlaying
-                    ? `${t.voiceEngine.speakingSystem} (${selectedLanguage.nativeLabel})`
-                    : t.voiceEngine.empatheticEngine}
-                </span>
-              </div>
-              <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
-                {selectedLanguage.nativeLabel}
-              </span>
-            </div>
-
-            {/* Central Mic Visualizer */}
-            <VoiceVisualizer
-              isListening={isListening}
-              isSpeaking={isSpeaking}
-              onClick={handleMicToggle}
-              statusLabel={statusMessage}
-            />
-
-            {/* Spoken Transcript Bubble */}
-            {spokenTranscript && (
-              <div className="mt-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-800 shadow-sm">
-                <div className="text-[10px] uppercase font-bold text-emerald-700 mb-1 flex items-center gap-1.5 tracking-wider">
-                  <Volume2 className="w-3.5 h-3.5" /> {t.voiceEngine.whatWeHeard}
-                </div>
-                <p className="text-sm font-semibold leading-relaxed italic text-slate-900">"{spokenTranscript}"</p>
-              </div>
-            )}
-
-            {/* Quick Access Preset Cards */}
-            {stage === 'INTENT' && (
-              <div className="mt-6 pt-5 border-t border-slate-100">
-                <div className="flex items-center justify-center mb-3">
-                  <span className="px-3 py-1 rounded-full bg-emerald-800 text-white font-bold text-xs tracking-wide">
-                    Quick Access / ಒಂದು ಕ್ಲಿಕ್ ಪರಿಶೀಲನೆ
+        {/* Main Content Body: Responsive Split-Screen on Laptop (lg:grid lg:grid-cols-12), Vertical Stack on Mobile */}
+        <main className="w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+            
+            {/* Left Column (Laptop: 5 cols, Sticky) - Microphone & Voice Companion */}
+            <div className="lg:col-span-5 w-full lg:sticky lg:top-4 space-y-4">
+              <div className="w-full bg-white border border-slate-200 rounded-3xl p-5 sm:p-6 shadow-sm relative overflow-hidden">
+                <div className="flex items-center justify-between text-xs text-slate-500 mb-2 border-b border-slate-100 pb-3">
+                  <div className="flex items-center gap-2">
+                    <span className={`w-2.5 h-2.5 rounded-full ${isSpeaking ? 'bg-emerald-500 animate-pulse' : isListening ? 'bg-orange-500 animate-ping' : 'bg-slate-400'}`} />
+                    <span className="font-bold text-slate-700">
+                      {playbackState.isPlaying
+                        ? `${t.voiceEngine.speakingSystem} (${selectedLanguage.nativeLabel})`
+                        : t.voiceEngine.empatheticEngine}
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                    {selectedLanguage.nativeLabel}
                   </span>
                 </div>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <button
-                    onClick={() => handleQuickDemoTrigger('street-vendor')}
-                    className="p-3.5 rounded-2xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-left transition-all active:scale-95 cursor-pointer shadow-sm flex items-center justify-between"
-                  >
-                    <div>
-                      <div className="text-xs font-bold text-slate-900">Tea Stall Vendor</div>
-                      <div className="text-[11px] text-amber-800 font-medium">PM SVANidhi Loan</div>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-amber-700" />
-                  </button>
 
-                  <button
-                    onClick={() => handleQuickDemoTrigger('accident')}
-                    className="p-3.5 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-left transition-all active:scale-95 cursor-pointer shadow-sm flex items-center justify-between"
-                  >
-                    <div>
-                      <div className="text-xs font-bold text-slate-900">Rickshaw Driver</div>
-                      <div className="text-[11px] text-emerald-800 font-medium">Fracture / PM-JAY</div>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-emerald-700" />
-                  </button>
+                {/* Central Mic Visualizer */}
+                <VoiceVisualizer
+                  isListening={isListening}
+                  isSpeaking={isSpeaking}
+                  onClick={handleMicToggle}
+                  statusLabel={statusMessage}
+                />
 
-                  <button
-                    onClick={() => handleQuickDemoTrigger('construction')}
-                    className="p-3.5 rounded-2xl bg-blue-50 hover:bg-blue-100 border border-blue-200 text-left transition-all active:scale-95 cursor-pointer shadow-sm flex items-center justify-between"
-                  >
-                    <div>
-                      <div className="text-xs font-bold text-slate-900">Construction Laborer</div>
-                      <div className="text-[11px] text-blue-800 font-medium">BOCW Welfare</div>
+                {/* Spoken Transcript Bubble */}
+                {spokenTranscript && (
+                  <div className="mt-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-800 shadow-sm animate-fade-in">
+                    <div className="text-[10px] uppercase font-bold text-emerald-700 mb-1 flex items-center gap-1.5 tracking-wider">
+                      <Volume2 className="w-3.5 h-3.5" /> {t.voiceEngine.whatWeHeard}
                     </div>
-                    <ArrowRight className="w-4 h-4 text-blue-700" />
-                  </button>
+                    <p className="text-sm font-semibold leading-relaxed italic text-slate-900">"{spokenTranscript}"</p>
+                  </div>
+                )}
+
+                {/* Quick Access Preset Cards */}
+                {stage === 'INTENT' && (
+                  <div className="mt-5 pt-4 border-t border-slate-100">
+                    <div className="flex items-center justify-center mb-2.5">
+                      <span className="px-3 py-1 rounded-full bg-emerald-800 text-white font-bold text-xs tracking-wide">
+                        {t.scenarios.orTestPresets}
+                      </span>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 gap-2">
+                      <button
+                        onClick={() => handleQuickDemoTrigger('street-vendor')}
+                        className="p-3 rounded-2xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-left transition-all active:scale-95 cursor-pointer shadow-sm flex items-center justify-between"
+                      >
+                        <div>
+                          <div className="text-xs font-bold text-slate-900">{t.scenarios.teaVendor.split('(')[0]}</div>
+                          <div className="text-[11px] text-amber-800 font-medium">PM SVANidhi Loan</div>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-amber-700" />
+                      </button>
+
+                      <button
+                        onClick={() => handleQuickDemoTrigger('accident')}
+                        className="p-3 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-left transition-all active:scale-95 cursor-pointer shadow-sm flex items-center justify-between"
+                      >
+                        <div>
+                          <div className="text-xs font-bold text-slate-900">{t.scenarios.autoDriver.split('(')[0]}</div>
+                          <div className="text-[11px] text-emerald-800 font-medium">Fracture / PM-JAY</div>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-emerald-700" />
+                      </button>
+
+                      <button
+                        onClick={() => handleQuickDemoTrigger('construction')}
+                        className="p-3 rounded-2xl bg-blue-50 hover:bg-blue-100 border border-blue-200 text-left transition-all active:scale-95 cursor-pointer shadow-sm flex items-center justify-between"
+                      >
+                        <div>
+                          <div className="text-xs font-bold text-slate-900">{t.scenarios.constructionWorker.split('(')[0]}</div>
+                          <div className="text-[11px] text-blue-800 font-medium">BOCW Welfare</div>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-blue-700" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Right Column (Laptop: 7 cols, Mobile: Stacked directly below) - Live Flow & Details */}
+            <div className="lg:col-span-7 w-full space-y-5">
+              {/* STAGE 0: Waiting for user to speak */}
+              {stage === 'INTENT' && (
+                <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm text-center">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center mx-auto mb-3 font-bold">
+                    1
+                  </div>
+                  <h3 className="text-base font-bold text-slate-900 mb-1">
+                    {t.steps.speakNeed}
+                  </h3>
+                  <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
+                    {t.voiceEngine.tapMicToSpeak}
+                  </p>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
 
-        {/* STAGE 1: Matched Scheme Card */}
-        {stage === 'SCHEME_MATCHED' && matchedScheme && (
-          <SchemeCard
-            scheme={matchedScheme}
-            matchedReason={matchReason}
-            langCode={selectedLanguage.code}
-            onConfirmApply={promptConsentStage}
-            t={t}
-          />
-        )}
+              {/* STAGE 1: Matched Scheme Card */}
+              {stage === 'SCHEME_MATCHED' && matchedScheme && (
+                <SchemeCard
+                  scheme={matchedScheme}
+                  matchedReason={matchReason}
+                  langCode={selectedLanguage.code}
+                  onConfirmApply={promptConsentStage}
+                  t={t}
+                />
+              )}
 
-        {/* STAGE 2: Explicit Privacy & Consent Gate */}
-        {stage === 'CONSENT' && (
-          <div className="bg-slate-900/95 border-2 border-orange-500/50 rounded-3xl p-6 sm:p-7 shadow-soft-lg animate-fade-in backdrop-blur-xl">
-            <div className="flex items-center gap-2.5 mb-3.5 text-orange-400">
-              <span className="p-1.5 rounded-xl bg-orange-500/20 text-orange-400">
-                <Lock className="w-5 h-5" />
-              </span>
-              <h3 className="text-base sm:text-lg font-black text-white tracking-tight">{t.consent.title}</h3>
-            </div>
+              {/* STAGE 2: Explicit Privacy & Consent Gate */}
+              {stage === 'CONSENT' && (
+                <div className="bg-white border-2 border-emerald-500 rounded-3xl p-6 shadow-sm animate-fade-in">
+                  <div className="flex items-center gap-2.5 mb-3.5 text-emerald-800">
+                    <span className="p-1.5 rounded-xl bg-emerald-100 text-emerald-800">
+                      <Lock className="w-5 h-5" />
+                    </span>
+                    <h3 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">{t.consent.title}</h3>
+                  </div>
 
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4 font-medium">
-              {t.scripts.consentIntro}
-            </p>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4 font-medium">
+                    {t.scripts.consentIntro}
+                  </p>
 
-            <div className="bg-black/40 p-4 rounded-2xl border border-white/5 mb-5 space-y-2.5 text-xs text-slate-300 font-medium">
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>{t.consent.dataMinimization}</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>{t.consent.zeroPersistence}</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>{t.consent.noAutomatedSubmission}</span>
-              </div>
-            </div>
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 mb-5 space-y-2.5 text-xs text-slate-700 font-medium">
+                    <div className="flex items-center gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <span>{t.consent.dataMinimization}</span>
+                    </div>
+                    <div className="flex items-center gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <span>{t.consent.zeroPersistence}</span>
+                    </div>
+                    <div className="flex items-center gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <span>{t.consent.noAutomatedSubmission}</span>
+                    </div>
+                  </div>
 
-            <div className="flex items-center gap-3">
-              <button
-                onClick={handleReset}
-                className="w-1/3 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition-all cursor-pointer"
-              >
-                {t.consent.declineButton}
-              </button>
-              <button
-                onClick={proceedToInterview}
-                className="w-2/3 py-3.5 rounded-2xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-600 hover:to-amber-600 text-white font-black text-xs shadow-lg shadow-orange-500/25 active:scale-95 transition-all cursor-pointer"
-              >
-                {t.consent.agreeButton}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* STAGE 3: Guided Voice Interview */}
-        {(stage === 'INTERVIEW' || stage === 'CONFIRMATION') && matchedScheme && (
-          <div className="space-y-4">
-            <LiveApplicationCard
-              schemeName={matchedScheme.name}
-              data={{
-                fullName: formData.fullName,
-                phone: formData.phone,
-                location: formData.location,
-                occupation: formData.covStatus ? `${formData.occupation} (${formData.covStatus})` : formData.occupation,
-                aadhaar: formData.aadhaarLast4,
-                bankAccount: formData.bankAccountLast4,
-                upiId: formData.upiId
-              }}
-              currentStep={interviewStep}
-              t={t}
-            />
-
-            {stage === 'CONFIRMATION' && (
-              <div className="p-4 sm:p-5 rounded-2xl bg-orange-950/40 border border-orange-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-soft-sm">
-                <div>
-                  <span className="text-xs font-bold text-orange-300 block">{t.interview.sayHaanToSubmit}</span>
-                  <span className="text-[11px] text-slate-400">{t.interview.summaryVerified}</span>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={handleReset}
+                      className="w-1/3 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-all cursor-pointer"
+                    >
+                      {t.consent.declineButton}
+                    </button>
+                    <button
+                      onClick={proceedToInterview}
+                      className="w-2/3 py-3.5 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white font-black text-xs shadow-md shadow-emerald-900/20 active:scale-95 transition-all cursor-pointer"
+                    >
+                      {t.consent.agreeButton}
+                    </button>
+                  </div>
                 </div>
-                <button
-                  onClick={finalizeApplication}
-                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-extrabold text-xs shadow-lg shadow-orange-500/25 active:scale-95 transition-all cursor-pointer"
-                >
-                  {t.interview.submitDemoButton}
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+              )}
 
-        {/* STAGE 4: Final Audio Rights Card & Download Centre */}
-        {stage === 'RIGHTS_CARD' && (
-          <div id="audio-rights-card-section" className="space-y-5 animate-fade-in scroll-mt-6">
-            <AudioRightsCard
-              scheme={matchedScheme || SCHEMES_DATABASE[0]}
-              formData={submissionPayload}
-              languageCode={selectedLanguage.code}
-              t={t}
-              isPlayingNote={isSpeaking}
-              onPlayVoiceNote={() => {
-                const currentScheme = matchedScheme || SCHEMES_DATABASE[0];
-                const audioText = currentScheme.legalRightsAudioText[selectedLanguage.code] || currentScheme.legalRightsAudioText['en'];
-                speakResponse(audioText, 'rights_card');
-              }}
-            />
+              {/* STAGE 3: Guided Voice Interview */}
+              {(stage === 'INTERVIEW' || stage === 'CONFIRMATION') && matchedScheme && (
+                <div className="space-y-4">
+                  <LiveApplicationCard
+                    schemeName={matchedScheme.name}
+                    data={{
+                      fullName: formData.fullName,
+                      phone: formData.phone,
+                      location: formData.location,
+                      occupation: formData.covStatus ? `${formData.occupation} (${formData.covStatus})` : formData.occupation,
+                      aadhaar: formData.aadhaarLast4,
+                      bankAccount: formData.bankAccountLast4,
+                      upiId: formData.upiId
+                    }}
+                    currentStep={interviewStep}
+                    t={t}
+                  />
 
-            {/* Comprehensive Download & Verification Center */}
-            <DownloadCenter
-              scheme={matchedScheme || SCHEMES_DATABASE[0]}
-              formData={submissionPayload}
-              t={t}
-              languageCode={selectedLanguage.code}
-              isPlayingAudio={isSpeaking}
-              onPlayAudio={() => {
-                const currentScheme = matchedScheme || SCHEMES_DATABASE[0];
-                const audioText = currentScheme.legalRightsAudioText[selectedLanguage.code] || currentScheme.legalRightsAudioText['en'];
-                speakResponse(audioText, 'rights_card');
-              }}
-            />
+                  {stage === 'CONFIRMATION' && (
+                    <div className="p-4 sm:p-5 rounded-2xl bg-emerald-50 border border-emerald-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
+                      <div>
+                        <span className="text-xs font-bold text-emerald-900 block">{t.interview.sayHaanToSubmit}</span>
+                        <span className="text-[11px] text-slate-600">{t.interview.summaryVerified}</span>
+                      </div>
+                      <button
+                        onClick={finalizeApplication}
+                        className="w-full sm:w-auto px-6 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-xs shadow-md active:scale-95 transition-all cursor-pointer"
+                      >
+                        {t.interview.submitDemoButton}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* STAGE 4: Final Audio Rights Card & Download Centre */}
+              {stage === 'RIGHTS_CARD' && (
+                <div id="audio-rights-card-section" className="space-y-5 animate-fade-in scroll-mt-6">
+                  <AudioRightsCard
+                    scheme={matchedScheme || SCHEMES_DATABASE[0]}
+                    formData={submissionPayload}
+                    languageCode={selectedLanguage.code}
+                    t={t}
+                    isPlayingNote={isSpeaking}
+                    onPlayVoiceNote={() => {
+                      const currentScheme = matchedScheme || SCHEMES_DATABASE[0];
+                      const audioText = currentScheme.legalRightsAudioText[selectedLanguage.code] || currentScheme.legalRightsAudioText['en'];
+                      speakResponse(audioText, 'rights_card');
+                    }}
+                  />
+
+                  {/* Comprehensive Download & Verification Center */}
+                  <DownloadCenter
+                    scheme={matchedScheme || SCHEMES_DATABASE[0]}
+                    formData={submissionPayload}
+                    t={t}
+                    languageCode={selectedLanguage.code}
+                    isPlayingAudio={isSpeaking}
+                    onPlayAudio={() => {
+                      const currentScheme = matchedScheme || SCHEMES_DATABASE[0];
+                      const audioText = currentScheme.legalRightsAudioText[selectedLanguage.code] || currentScheme.legalRightsAudioText['en'];
+                      speakResponse(audioText, 'rights_card');
+                    }}
+                  />
+                </div>
+              )}
+            </div>
           </div>
-        )}
-      </main>
+        </main>
       </div>
 
       {/* How it Works / Instructions Modal */}

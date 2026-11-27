@@ -3,11 +3,13 @@ import { kn } from './kn';
 import { hi } from './hi';
 import { ta } from './ta';
 import { bn } from './bn';
+import { te } from './te';
 
-export const locales: Record<'en' | 'kn' | 'hi' | 'ta' | 'bn', LocaleTranslations> = {
+export const locales: Record<'en' | 'kn' | 'hi' | 'ta' | 'bn' | 'te', LocaleTranslations> = {
   en,
-  kn,
   hi,
+  kn,
+  te,
   ta,
   bn
 };
