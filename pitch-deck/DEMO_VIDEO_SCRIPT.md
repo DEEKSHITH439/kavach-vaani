@@ -23,7 +23,7 @@
 - **Speaker:**  
   *"Notice how the worker doesn't type a single character. Kavach Vaani instantly extracts the occupation—Street Vendor, location—Lucknow, and the need—₹15,000 working capital loan. It queries the statutory scheme engine and speaks back in warm vernacular Hindi..."*  
 - **Audio Output from App:**  
-  *"Aap PM SVANidhi yojana ke patra hain! Isme bina kisi guarantee ke 7% byaj subsidy par loan milta hai. Kya main aapka form abhi bhar doon?"*
+  *"Aap PM SVANidhi yojana ke patra ho sakte hain! Isme teen charano mein ₹15,000, ₹25,000 aur ₹50,000 tak ka rin uplabdh hai aur samay par chukane par 7% byaj subsidy milti hai. Kya aap aavedan taiyari shuru karna chahte hain?"*
 
 ---
 
@@ -45,7 +45,7 @@
   3. Click 'Listen to Rights' to play the voice note.  
   4. Click 'Download Official PDF Card' and show the generated clean PDF receipt.  
 - **Speaker:**  
-  *"This is the breakthrough: The Audio Rights Card. Most informal workers fear police eviction or municipal extortion. Kavach Vaani generates a spoken legal rights note citing Section 3 of the Street Vendors Act 2014, warning that no officer can evict them without a 30-day notice, and provides official anti-corruption grievance helplines."*
+  *"This is the breakthrough: The Audio Rights Card. Most informal workers fear police eviction or municipal extortion. Kavach Vaani generates a spoken legal rights note citing Section 18(3) of the Street Vendors Act 2014, warning that no local authority can evict them without a 30-day notice, and provides verified official support portals and grievance channels."*
 
 ---
 

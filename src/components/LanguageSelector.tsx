@@ -1,17 +1,20 @@
 import React from 'react';
 import { SUPPORTED_LANGUAGES, VoiceOption } from '../lib/voiceEngine';
 import { Languages } from 'lucide-react';
+import { LocaleTranslations } from '../locales';
 
 interface LanguageSelectorProps {
   currentLanguage: VoiceOption;
   onSelect: (lang: VoiceOption) => void;
   disabled?: boolean;
+  t: LocaleTranslations;
 }
 
 export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   currentLanguage,
   onSelect,
-  disabled
+  disabled,
+  t
 }) => {
   return (
     <div className="w-full" role="region" aria-label="Language selection">
@@ -20,10 +23,10 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
           id="language-selector-label"
           className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5"
         >
-          <Languages className="w-4 h-4 text-orange-400" aria-hidden="true" /> Choose Voice Dialect / भाषा चुनें
+          <Languages className="w-4 h-4 text-orange-400" aria-hidden="true" /> {t.languageSelectLabel}
         </label>
-        <span className="text-[11px] px-2 py-0.5 rounded-full bg-orange-950/60 text-orange-300 border border-orange-500/30">
-          Regional Audio
+        <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-orange-950/60 text-orange-300 border border-orange-500/30 font-medium">
+          {t.regionalAudioBadge}
         </span>
       </div>
 
