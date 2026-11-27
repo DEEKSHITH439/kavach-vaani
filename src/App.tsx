@@ -21,7 +21,9 @@ import {
   Lock, 
   Sparkles,
   ArrowRight,
-  Info
+  Info,
+  CheckCircle2,
+  HeartHandshake
 } from 'lucide-react';
 
 export function App() {
@@ -284,13 +286,12 @@ export function App() {
   const finalizeApplication = () => {
     const newId = `KV-${selectedLanguage.code.toUpperCase()}-${Math.floor(100000 + Math.random() * 900000)}`;
     setApplicationId(newId);
-    
-    // Fallback ensure matchedScheme is never null so Rights Card always renders
+
     const activeScheme = matchedScheme || SCHEMES_DATABASE[0];
     if (!matchedScheme) {
       setMatchedScheme(activeScheme);
     }
-    
+
     setStage('RIGHTS_CARD');
 
     try {
@@ -392,28 +393,35 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center p-3 sm:p-6 pb-24 selection:bg-orange-500 font-sans">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center p-3.5 sm:p-6 pb-28 selection:bg-orange-500 font-sans relative overflow-x-hidden">
+      {/* Decorative ambient background glows */}
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[720px] h-[340px] bg-gradient-to-b from-orange-500/10 via-amber-500/5 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="fixed bottom-0 right-0 w-[400px] h-[300px] bg-emerald-500/5 rounded-full blur-3xl pointer-events-none -z-10" />
+
       {/* Top Prototype Sandbox Notice Bar */}
-      <div className="w-full max-w-2xl bg-amber-950/40 border border-amber-500/30 rounded-xl px-3.5 py-2 mb-3 flex flex-wrap items-center justify-between text-[11px] text-amber-300 gap-2">
-        <span className="flex items-center gap-1.5 font-medium">
-          <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-          <strong>{t.sandboxNotice}</strong>
+      <div className="w-full max-w-2xl bg-gradient-to-r from-amber-950/50 via-slate-900 to-amber-950/40 border border-amber-500/30 rounded-2xl px-4 py-2 mb-3 flex flex-wrap items-center justify-between text-xs text-amber-200 gap-2 shadow-soft-sm">
+        <span className="flex items-center gap-2 font-medium">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+          </span>
+          <strong className="text-amber-300">{t.sandboxNotice}</strong>
         </span>
-        <span className="text-[10px] text-amber-400/90 font-mono bg-amber-950/60 px-2 py-0.5 rounded border border-amber-500/20">
+        <span className="text-[10px] text-amber-400/90 font-mono bg-amber-950/80 px-2.5 py-0.5 rounded-full border border-amber-500/30 font-bold">
           {t.zeroKeysBadge}
         </span>
       </div>
 
       {/* Top Navbar */}
-      <header className="w-full max-w-2xl flex items-center justify-between py-3 border-b border-slate-800 mb-4">
+      <header className="w-full max-w-2xl flex items-center justify-between py-3.5 border-b border-slate-800/80 mb-4.5">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-orange-500 via-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/20 text-white font-black">
-            <Shield className="w-6 h-6" />
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-orange-500 via-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/25 text-white font-black shrink-0">
+            <Shield className="w-6 h-6 stroke-[2.5]" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-black tracking-tight text-white">{t.appTitle}</h1>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30">
+              <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white">{t.appTitle}</h1>
+              <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/30">
                 {selectedLanguage.nativeLabel}
               </span>
             </div>
@@ -421,28 +429,28 @@ export function App() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <button
             onClick={() => setShowHelpModal(true)}
-            className="p-2 sm:px-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 transition-all text-xs flex items-center gap-1.5 active:scale-95"
+            className="p-2 sm:px-3 rounded-xl bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 transition-all text-xs flex items-center gap-1.5 active:scale-95 cursor-pointer shadow-soft-sm"
             title="How to Use & Journey Flow"
           >
             <HelpCircle className="w-4 h-4 text-orange-400" />
-            <span className="hidden sm:inline text-[11px] font-semibold">{t.howItWorks}</span>
+            <span className="hidden sm:inline text-[11px] font-bold">{t.howItWorks}</span>
           </button>
 
           <button
             onClick={() => setShowKeyModal(true)}
-            className="p-2 sm:px-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 transition-all text-xs flex items-center gap-1.5 active:scale-95"
+            className="p-2 sm:px-3 rounded-xl bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 transition-all text-xs flex items-center gap-1.5 active:scale-95 cursor-pointer shadow-soft-sm"
             title="Zero-Key Guarantee"
           >
             <Key className="w-4 h-4 text-amber-400" />
-            <span className="hidden sm:inline text-[11px] font-semibold">{t.zeroKeyMode}</span>
+            <span className="hidden sm:inline text-[11px] font-bold">{t.zeroKeyMode}</span>
           </button>
 
           <button
             onClick={handleReset}
-            className="p-2 sm:px-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 transition-all text-xs flex items-center gap-1.5 active:scale-95"
+            className="p-2 sm:p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 transition-all active:scale-95 cursor-pointer shadow-soft-sm"
             title={t.resetConversation}
           >
             <RefreshCw className="w-4 h-4" />
@@ -453,24 +461,24 @@ export function App() {
       {/* Main Container */}
       <main className="w-full max-w-2xl flex flex-col gap-5">
         {/* Step Indicator Progress Bar */}
-        <div className="w-full bg-slate-900/70 p-2.5 rounded-2xl border border-slate-800/80 flex items-center justify-between text-[11px] overflow-x-auto">
-          <span className={`px-2.5 py-1 rounded-xl font-bold whitespace-nowrap transition-all ${stage === 'INTENT' ? 'bg-orange-500 text-white shadow-md' : 'text-slate-500'}`}>
+        <div className="w-full bg-slate-900/80 p-2 sm:p-2.5 rounded-2xl border border-slate-800/80 flex items-center justify-between text-[11px] overflow-x-auto shadow-soft-sm">
+          <span className={`px-2.5 py-1 rounded-xl font-extrabold whitespace-nowrap transition-all duration-200 ${stage === 'INTENT' ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20' : 'text-slate-500'}`}>
             {t.steps.speakNeed}
           </span>
-          <span className="text-slate-700 px-1">➔</span>
-          <span className={`px-2.5 py-1 rounded-xl font-bold whitespace-nowrap transition-all ${stage === 'SCHEME_MATCHED' ? 'bg-orange-500 text-white shadow-md' : 'text-slate-500'}`}>
+          <span className="text-slate-700 px-1 font-bold">➔</span>
+          <span className={`px-2.5 py-1 rounded-xl font-extrabold whitespace-nowrap transition-all duration-200 ${stage === 'SCHEME_MATCHED' ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20' : 'text-slate-500'}`}>
             {t.steps.schemeMatch}
           </span>
-          <span className="text-slate-700 px-1">➔</span>
-          <span className={`px-2.5 py-1 rounded-xl font-bold whitespace-nowrap transition-all ${stage === 'CONSENT' ? 'bg-orange-500 text-white shadow-md' : 'text-slate-500'}`}>
+          <span className="text-slate-700 px-1 font-bold">➔</span>
+          <span className={`px-2.5 py-1 rounded-xl font-extrabold whitespace-nowrap transition-all duration-200 ${stage === 'CONSENT' ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20' : 'text-slate-500'}`}>
             {t.steps.consentCheck}
           </span>
-          <span className="text-slate-700 px-1">➔</span>
-          <span className={`px-2.5 py-1 rounded-xl font-bold whitespace-nowrap transition-all ${(stage === 'INTERVIEW' || stage === 'CONFIRMATION') ? 'bg-orange-500 text-white shadow-md' : 'text-slate-500'}`}>
+          <span className="text-slate-700 px-1 font-bold">➔</span>
+          <span className={`px-2.5 py-1 rounded-xl font-extrabold whitespace-nowrap transition-all duration-200 ${(stage === 'INTERVIEW' || stage === 'CONFIRMATION') ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20' : 'text-slate-500'}`}>
             {t.steps.details}
           </span>
-          <span className="text-slate-700 px-1">➔</span>
-          <span className={`px-2.5 py-1 rounded-xl font-bold whitespace-nowrap transition-all ${stage === 'RIGHTS_CARD' ? 'bg-emerald-500 text-white shadow-md' : 'text-slate-500'}`}>
+          <span className="text-slate-700 px-1 font-bold">➔</span>
+          <span className={`px-2.5 py-1 rounded-xl font-extrabold whitespace-nowrap transition-all duration-200 ${stage === 'RIGHTS_CARD' ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20' : 'text-slate-500'}`}>
             {t.steps.rightsCard}
           </span>
         </div>
@@ -484,21 +492,21 @@ export function App() {
         />
 
         {/* Live Audio Interaction Hero Card */}
-        <div className="bg-gradient-to-b from-slate-900 via-slate-900/95 to-slate-950 border border-slate-800 rounded-3xl p-6 shadow-2xl relative overflow-hidden backdrop-blur-xl">
+        <div className="bg-gradient-to-b from-slate-900/95 via-slate-900 to-slate-950 border border-slate-800/90 rounded-3xl p-6 sm:p-7 shadow-soft-lg relative overflow-hidden backdrop-blur-xl">
           {/* Header Tagline Callout */}
           <div className="mb-4 text-center">
-            <h2 className="text-lg sm:text-xl font-black text-white tracking-tight bg-gradient-to-r from-orange-400 via-amber-300 to-white bg-clip-text text-transparent">
+            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight bg-gradient-to-r from-orange-400 via-amber-300 to-white bg-clip-text text-transparent">
               "{t.tagline}"
             </h2>
-            <p className="text-xs text-slate-300 mt-1 max-w-lg mx-auto font-medium">
+            <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-lg mx-auto font-medium leading-relaxed">
               {t.supportingText}
             </p>
           </div>
 
-          <div className="flex items-center justify-between text-xs text-slate-400 mb-2 border-t border-slate-800/80 pt-3">
-            <div className="flex items-center gap-1.5">
-              <span className={`w-2 h-2 rounded-full ${isSpeaking ? 'bg-emerald-400 animate-pulse' : isListening ? 'bg-orange-400 animate-ping' : 'bg-slate-500'}`} />
-              <span className="font-semibold text-slate-300">
+          <div className="flex items-center justify-between text-xs text-slate-400 mb-2 border-t border-slate-800/80 pt-3.5">
+            <div className="flex items-center gap-2">
+              <span className={`w-2.5 h-2.5 rounded-full ${isSpeaking ? 'bg-emerald-400 animate-pulse' : isListening ? 'bg-orange-400 animate-ping' : 'bg-slate-500'}`} />
+              <span className="font-bold text-slate-300">
                 {playbackState.isPlaying
                   ? playbackState.source === 'bundled_audio'
                     ? `${t.voiceEngine.playingBundled} (${playbackState.languageLabel})`
@@ -507,7 +515,7 @@ export function App() {
               </span>
             </div>
             {playbackState.isPlaying && (
-              <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500/40 flex items-center gap-1 font-mono font-bold">
+              <span className="text-[10px] px-3 py-1 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500/40 flex items-center gap-1 font-mono font-extrabold shadow-sm">
                 <Radio className="w-3 h-3 text-emerald-400 animate-pulse" />
                 {playbackState.source === 'bundled_audio' ? t.voiceEngine.offlineRecording : t.voiceEngine.systemTts}
               </span>
@@ -524,36 +532,36 @@ export function App() {
 
           {/* Spoken Transcript Bubble */}
           {spokenTranscript && (
-            <div className="mt-4 p-3.5 rounded-2xl bg-black/50 border border-slate-800 text-xs text-slate-200">
-              <div className="text-[10px] uppercase font-bold text-orange-400 mb-1 flex items-center gap-1">
+            <div className="mt-4 p-4 rounded-2xl bg-black/50 border border-slate-800 text-xs text-slate-200 shadow-inner">
+              <div className="text-[10px] uppercase font-extrabold text-orange-400 mb-1 flex items-center gap-1.5 tracking-wider">
                 <Volume2 className="w-3.5 h-3.5" /> {t.voiceEngine.whatWeHeard}
               </div>
-              <p className="text-sm font-medium leading-relaxed italic text-white">"{spokenTranscript}"</p>
+              <p className="text-sm font-semibold leading-relaxed italic text-white">"{spokenTranscript}"</p>
             </div>
           )}
 
           {/* Quick Demo Voice Prompts for Evaluators */}
           {stage === 'INTENT' && (
             <div className="mt-5 pt-4 border-t border-slate-800/80">
-              <span className="text-[11px] font-semibold text-slate-400 block mb-2">
+              <span className="text-[11px] font-bold text-slate-400 block mb-2.5 uppercase tracking-wider">
                 {t.scenarios.orTestPresets}
               </span>
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => handleQuickDemoTrigger('street-vendor')}
-                  className="px-3 py-1.5 rounded-xl bg-orange-950/40 hover:bg-orange-900/60 border border-orange-500/30 text-orange-200 text-xs font-medium transition-all active:scale-95"
+                  className="px-3.5 py-2 rounded-xl bg-orange-950/40 hover:bg-orange-900/60 border border-orange-500/30 text-orange-200 text-xs font-semibold transition-all active:scale-95 cursor-pointer shadow-soft-sm"
                 >
                   {t.scenarios.teaVendor}
                 </button>
                 <button
                   onClick={() => handleQuickDemoTrigger('accident')}
-                  className="px-3 py-1.5 rounded-xl bg-blue-950/40 hover:bg-blue-900/60 border border-blue-500/30 text-blue-200 text-xs font-medium transition-all active:scale-95"
+                  className="px-3.5 py-2 rounded-xl bg-blue-950/40 hover:bg-blue-900/60 border border-blue-500/30 text-blue-200 text-xs font-semibold transition-all active:scale-95 cursor-pointer shadow-soft-sm"
                 >
                   {t.scenarios.autoDriver}
                 </button>
                 <button
                   onClick={() => handleQuickDemoTrigger('construction')}
-                  className="px-3 py-1.5 rounded-xl bg-amber-950/40 hover:bg-amber-900/60 border border-amber-500/30 text-amber-200 text-xs font-medium transition-all active:scale-95"
+                  className="px-3.5 py-2 rounded-xl bg-amber-950/40 hover:bg-amber-900/60 border border-amber-500/30 text-amber-200 text-xs font-semibold transition-all active:scale-95 cursor-pointer shadow-soft-sm"
                 >
                   {t.scenarios.constructionWorker}
                 </button>
@@ -575,27 +583,29 @@ export function App() {
 
         {/* STAGE 2: Explicit Privacy & Consent Gate */}
         {stage === 'CONSENT' && (
-          <div className="bg-slate-900 border-2 border-orange-500/50 rounded-3xl p-6 shadow-2xl animate-fade-in">
-            <div className="flex items-center gap-2 mb-3 text-orange-400">
-              <Lock className="w-5 h-5" />
-              <h3 className="text-base font-bold text-white">{t.consent.title}</h3>
+          <div className="bg-slate-900/95 border-2 border-orange-500/50 rounded-3xl p-6 sm:p-7 shadow-soft-lg animate-fade-in backdrop-blur-xl">
+            <div className="flex items-center gap-2.5 mb-3.5 text-orange-400">
+              <span className="p-1.5 rounded-xl bg-orange-500/20 text-orange-400">
+                <Lock className="w-5 h-5" />
+              </span>
+              <h3 className="text-base sm:text-lg font-black text-white tracking-tight">{t.consent.title}</h3>
             </div>
 
-            <p className="text-xs text-slate-300 leading-relaxed mb-4">
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4 font-medium">
               {t.scripts.consentIntro}
             </p>
 
-            <div className="bg-black/40 p-3.5 rounded-2xl border border-white/5 mb-5 space-y-2 text-[11px] text-slate-300">
-              <div className="flex items-center gap-2">
-                <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+            <div className="bg-black/40 p-4 rounded-2xl border border-white/5 mb-5 space-y-2.5 text-xs text-slate-300 font-medium">
+              <div className="flex items-center gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span>{t.consent.dataMinimization}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <div className="flex items-center gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span>{t.consent.zeroPersistence}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <div className="flex items-center gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span>{t.consent.noAutomatedSubmission}</span>
               </div>
             </div>
@@ -603,13 +613,13 @@ export function App() {
             <div className="flex items-center gap-3">
               <button
                 onClick={handleReset}
-                className="w-1/3 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition-all"
+                className="w-1/3 py-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition-all cursor-pointer"
               >
                 {t.consent.declineButton}
               </button>
               <button
                 onClick={proceedToInterview}
-                className="w-2/3 py-3 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-xs shadow-lg shadow-orange-500/20 active:scale-95 transition-all"
+                className="w-2/3 py-3.5 rounded-2xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-600 hover:to-amber-600 text-white font-black text-xs shadow-lg shadow-orange-500/25 active:scale-95 transition-all cursor-pointer"
               >
                 {t.consent.agreeButton}
               </button>
@@ -636,14 +646,14 @@ export function App() {
             />
 
             {stage === 'CONFIRMATION' && (
-              <div className="p-4 rounded-2xl bg-orange-950/40 border border-orange-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="p-4 sm:p-5 rounded-2xl bg-orange-950/40 border border-orange-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-soft-sm">
                 <div>
                   <span className="text-xs font-bold text-orange-300 block">{t.interview.sayHaanToSubmit}</span>
                   <span className="text-[11px] text-slate-400">{t.interview.summaryVerified}</span>
                 </div>
                 <button
                   onClick={finalizeApplication}
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs shadow-lg shadow-orange-500/20 active:scale-95 transition-all"
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-extrabold text-xs shadow-lg shadow-orange-500/25 active:scale-95 transition-all cursor-pointer"
                 >
                   {t.interview.submitDemoButton}
                 </button>
@@ -687,43 +697,45 @@ export function App() {
 
       {/* How it Works / Instructions Modal */}
       {showHelpModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center gap-2 mb-3">
-              <HelpCircle className="w-5 h-5 text-orange-400" />
-              <h3 className="text-base font-bold text-white">{t.modal.howTitle}</h3>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-7 max-w-lg w-full shadow-soft-lg max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center gap-2.5 mb-4">
+              <span className="p-1.5 rounded-xl bg-orange-500/20 text-orange-400">
+                <HelpCircle className="w-5 h-5" />
+              </span>
+              <h3 className="text-base sm:text-lg font-black text-white">{t.modal.howTitle}</h3>
             </div>
             
-            <div className="space-y-3 text-xs text-slate-300">
-              <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
-                <strong className="text-orange-400 block mb-1">{t.modal.step1Title}</strong>
-                {t.modal.step1Desc}
+            <div className="space-y-3 text-xs text-slate-300 font-medium">
+              <div className="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-800">
+                <strong className="text-orange-400 block mb-1 text-xs font-bold">{t.modal.step1Title}</strong>
+                <p className="leading-relaxed">{t.modal.step1Desc}</p>
               </div>
 
-              <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
-                <strong className="text-orange-400 block mb-1">{t.modal.step2Title}</strong>
-                {t.modal.step2Desc}
+              <div className="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-800">
+                <strong className="text-orange-400 block mb-1 text-xs font-bold">{t.modal.step2Title}</strong>
+                <p className="leading-relaxed">{t.modal.step2Desc}</p>
               </div>
 
-              <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
-                <strong className="text-orange-400 block mb-1">{t.modal.step3Title}</strong>
-                {t.modal.step3Desc}
+              <div className="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-800">
+                <strong className="text-orange-400 block mb-1 text-xs font-bold">{t.modal.step3Title}</strong>
+                <p className="leading-relaxed">{t.modal.step3Desc}</p>
               </div>
 
-              <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
-                <strong className="text-orange-400 block mb-1">{t.modal.step4Title}</strong>
-                {t.modal.step4Desc}
+              <div className="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-800">
+                <strong className="text-orange-400 block mb-1 text-xs font-bold">{t.modal.step4Title}</strong>
+                <p className="leading-relaxed">{t.modal.step4Desc}</p>
               </div>
 
-              <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
-                <strong className="text-orange-400 block mb-1">{t.modal.step5Title}</strong>
-                {t.modal.step5Desc}
+              <div className="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-800">
+                <strong className="text-orange-400 block mb-1 text-xs font-bold">{t.modal.step5Title}</strong>
+                <p className="leading-relaxed">{t.modal.step5Desc}</p>
               </div>
             </div>
 
             <button
               onClick={() => setShowHelpModal(false)}
-              className="mt-5 w-full py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold transition-all"
+              className="mt-5 w-full py-3 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-xs font-black transition-all cursor-pointer shadow-md shadow-orange-500/20"
             >
               {t.modal.gotItBtn}
             </button>
@@ -733,13 +745,15 @@ export function App() {
 
       {/* Optional API Key Modal */}
       {showKeyModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl">
-            <div className="flex items-center gap-2 mb-3">
-              <Key className="w-5 h-5 text-amber-400" />
-              <h3 className="text-base font-bold text-white">{t.modal.keyTitle}</h3>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-7 max-w-md w-full shadow-soft-lg">
+            <div className="flex items-center gap-2.5 mb-3.5">
+              <span className="p-1.5 rounded-xl bg-amber-500/20 text-amber-400">
+                <Key className="w-5 h-5" />
+              </span>
+              <h3 className="text-base font-black text-white">{t.modal.keyTitle}</h3>
             </div>
-            <p className="text-xs text-slate-400 mb-4 leading-relaxed">
+            <p className="text-xs text-slate-400 mb-4 leading-relaxed font-medium">
               {t.modal.keyDesc}
             </p>
 
@@ -754,7 +768,7 @@ export function App() {
             <div className="flex items-center justify-end gap-2">
               <button
                 onClick={() => setShowKeyModal(false)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
+                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white cursor-pointer"
               >
                 {t.modal.closeBtn}
               </button>
@@ -763,7 +777,7 @@ export function App() {
                   setKeySaved(true);
                   setTimeout(() => setShowKeyModal(false), 500);
                 }}
-                className="px-4 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold flex items-center gap-1"
+                className="px-5 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-extrabold flex items-center gap-1.5 cursor-pointer shadow-md"
               >
                 {keySaved ? <Check className="w-4 h-4" /> : null}
                 <span>{keySaved ? t.modal.savedBtn : t.modal.saveBtn}</span>
