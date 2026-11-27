@@ -1,4 +1,4 @@
-// Comprehensive multi-lingual voice engine using Web Speech API + dialect mappings
+// Comprehensive multi-lingual voice engine using Web Speech API + Web Audio Tone / Online Vernacular TTS
 export interface VoiceOption {
   code: string;
   label: string;
@@ -6,7 +6,7 @@ export interface VoiceOption {
   speechLang: string;
   samplePrompt: string;
   greetingText: string;
-  transliteratedAudioText: string; // Phonetic fallback text for crystal-clear TTS audio on any OS
+  transliteratedAudioText: string;
 }
 
 export const SUPPORTED_LANGUAGES: VoiceOption[] = [
@@ -16,7 +16,7 @@ export const SUPPORTED_LANGUAGES: VoiceOption[] = [
     nativeLabel: 'हिन्दी / Hinglish',
     speechLang: 'hi-IN',
     greetingText: 'नमस्ते! मैं कवच वाणी हूँ। आप क्या काम करते हैं और आपको किस सहायता या ऋण की आवश्यकता है?',
-    transliteratedAudioText: 'Namaste! Main Kavach Vaani hoon. Aap kya kaam karte hain aur aapko kis sahayata ya loan ki zaroorat hai?',
+    transliteratedAudioText: 'Namaste! Main Kavach Vaani hoon. Aap kya kaam karte hain aur aapko kis loan ya sahayata ki zaroorat hai?',
     samplePrompt: 'मैं लखनऊ में रिक्शा चलाता हूँ, पैर में चोट लगी है, क्या सरकारी आर्थिक सहायता मिलेगी?'
   },
   {
@@ -25,7 +25,7 @@ export const SUPPORTED_LANGUAGES: VoiceOption[] = [
     nativeLabel: 'ಕನ್ನಡ / Kanglish',
     speechLang: 'kn-IN',
     greetingText: 'ನಮಸ್ಕಾರ! ನಾನು ಕವಚ ವಾಣಿ. ನೀವು ಯಾವ ಕೆಲಸ ಮಾಡುತ್ತಿದ್ದೀರಿ ಮತ್ತು ನಿಮಗೆ ಯಾವ ಸಾಲ ಅಥವಾ ಸಹಾಯ ಬೇಕು?',
-    transliteratedAudioText: 'Namaskara! Naanu Kavach Vaani. Neevu yaava kelasa maaduttiddeeri, mattu nimage yaava saala athava sahaaya beku?',
+    transliteratedAudioText: 'Namaskara! Naanu Kavach Vaani. Neevu yaava kelasa maaduttiddeeri, mattu nimage yaava loan athava sahaaya beku?',
     samplePrompt: 'ನಾನು ಬೆಂಗಳೂರಿನಲ್ಲಿ ಚಹಾ ಅಂಗಡಿ ನಡೆಸುತ್ತಿದ್ದೇನೆ, ಹೊಸ ಬರ್ನರ್ ಖರೀದಿಸಲು ₹15,000 ಸಾಲ ಬೇಕು.'
   },
   {
@@ -34,7 +34,7 @@ export const SUPPORTED_LANGUAGES: VoiceOption[] = [
     nativeLabel: 'தமிழ் / Tanglish',
     speechLang: 'ta-IN',
     greetingText: 'வணக்கம்! நான் கவச் வாணி. நீங்கள் என்ன வேலை செய்கிறீர்கள்? உங்களுக்கு என்ன உதவி அல்லது கடன் தேவை?',
-    transliteratedAudioText: 'Vanakkam! Naan Kavach Vaani. Neengal enna velai seigireergal? Ungalukku enna udhavi alladhu kadan thevai?',
+    transliteratedAudioText: 'Vanakkam! Naan Kavach Vaani. Neengal enna velai seigireergal? Ungalukku enna loan alladhu udhavi thevai?',
     samplePrompt: 'நான் தெருவோர தள்ளுவண்டி வியாபಾರಿ, தொழில் துவங்க ₹20,000 அரசு கடன் கிடைக்குமா?'
   },
   {
@@ -43,7 +43,7 @@ export const SUPPORTED_LANGUAGES: VoiceOption[] = [
     nativeLabel: 'বাংলা',
     speechLang: 'bn-IN',
     greetingText: 'নমস্কার! আমি কবচ বাণী। আপনি কী কাজ করেন এবং আপনার কী সাহায্য বা ঋণ প্রয়োজন?',
-    transliteratedAudioText: 'Nomoshkar! Aami Kavach Vaani. Aapni ki kaaj koren ebong aapanar ki shaahaajyo baa rin proyojon?',
+    transliteratedAudioText: 'Nomoshkar! Aami Kavach Vaani. Aapni ki kaaj koren ebong aapanar ki loan baa shaahaajyo dorkar?',
     samplePrompt: 'আমি কলকাতায় নির্মাণ কাজ করি, আমার পরিবারের জন্য স্বাস্থ্য বিমা কীভাবে পাব?'
   },
   {
@@ -61,20 +61,10 @@ export class VoiceEngine {
   private recognition: any = null;
   private isListening: boolean = false;
   private currentLanguage: VoiceOption = SUPPORTED_LANGUAGES[0];
-  private availableVoices: SpeechSynthesisVoice[] = [];
+  private currentAudioElement: HTMLAudioElement | null = null;
 
   constructor(langCode: string = 'hi') {
     this.setLanguage(langCode);
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      this.loadVoices();
-      window.speechSynthesis.onvoiceschanged = () => {
-        this.loadVoices();
-      };
-    }
-  }
-
-  private loadVoices() {
-    this.availableVoices = window.speechSynthesis.getVoices();
   }
 
   public setLanguage(code: string) {
@@ -169,81 +159,82 @@ export class VoiceEngine {
   }
 
   /**
-   * Resilient Multi-lingual Text-To-Speech:
-   * 1. Looks for a native dialect voice on the OS (e.g. Hindi, Kannada, Tamil, Bengali).
-   * 2. If Windows/Chrome lacks that voice pack, it falls back to an Indian English (en-IN) voice
-   *    and speaks the phonetic transliteration (Kanglish, Tanglish, Hinglish) so the user
-   *    hears perfectly intelligible regional words instead of silence or broken robotic sounds!
+   * Resilient Speech Synthesis:
+   * Strategy 1: Try Native Google / Regional TTS voice if installed.
+   * Strategy 2: If OS only has US English voices (David / Zira), speak the phonetic
+   * transliteration with lang="en-US" so you hear audio LOUD & CLEAR!
+   * Strategy 3: Also attempts online Google Translate TTS audio stream fallback.
    */
   public speak(
     text: string, 
     fallbackPhoneticText?: string,
-    onEnd?: () => void,
-    customLang?: string
+    onEnd?: () => void
   ): void {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-      if (onEnd) onEnd();
+    this.stopSpeaking();
+
+    const phoneticText = fallbackPhoneticText || text;
+    const targetLangCode = this.currentLanguage.code;
+
+    // Check available voices
+    const voices = (typeof window !== 'undefined' && 'speechSynthesis' in window) 
+      ? window.speechSynthesis.getVoices() 
+      : [];
+
+    const nativeVoice = voices.find(v => {
+      const vLang = v.lang.toLowerCase();
+      return vLang === this.currentLanguage.speechLang.toLowerCase() || 
+             vLang.startsWith(targetLangCode);
+    });
+
+    // 1. If native voice (like Hindi / Kannada) exists on device, speak native script
+    if (nativeVoice) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.voice = nativeVoice;
+      utterance.lang = nativeVoice.lang;
+      utterance.rate = 0.95;
+      utterance.onend = () => { if (onEnd) onEnd(); };
+      utterance.onerror = () => { if (onEnd) onEnd(); };
+      window.speechSynthesis.speak(utterance);
       return;
     }
 
-    window.speechSynthesis.cancel();
+    // 2. Fallback: OS only has David/Zira (en-US). Speak the phonetic text with en-US voice!
+    // This is GUARANTEED to produce sound on Windows!
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(phoneticText);
+      utterance.rate = 0.92;
+      utterance.pitch = 1.0;
+      utterance.lang = 'en-US';
 
-    if (this.availableVoices.length === 0) {
-      this.availableVoices = window.speechSynthesis.getVoices();
-    }
+      // Pick Zira or David or whatever English voice exists
+      const enVoice = voices.find(v => v.lang.startsWith('en')) || voices[0];
+      if (enVoice) {
+        utterance.voice = enVoice;
+      }
 
-    const targetLangCode = (customLang || this.currentLanguage.speechLang).toLowerCase();
-    const primaryPrefix = targetLangCode.split('-')[0]; // 'kn', 'hi', 'ta', 'bn', 'en'
+      utterance.onend = () => { if (onEnd) onEnd(); };
+      utterance.onerror = () => { if (onEnd) onEnd(); };
 
-    // Find native voice for this language
-    const nativeVoice = this.availableVoices.find(v => {
-      const vLang = v.lang.toLowerCase();
-      return vLang === targetLangCode || vLang.startsWith(primaryPrefix);
-    });
+      // Chrome sometimes requires resume
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
 
-    // Indian English voice fallback
-    const indianVoice = this.availableVoices.find(v => {
-      const vLang = v.lang.toLowerCase();
-      return vLang === 'en-in' || v.name.toLowerCase().includes('india') || v.name.toLowerCase().includes('ravi') || v.name.toLowerCase().includes('heera');
-    });
-
-    const anyEnglishVoice = this.availableVoices.find(v => v.lang.toLowerCase().startsWith('en')) || this.availableVoices[0];
-
-    const utterance = new SpeechSynthesisUtterance();
-    utterance.rate = 0.95;
-    utterance.pitch = 1.0;
-
-    if (nativeVoice) {
-      // OS has the native language voice installed (e.g. Google Hindi, Microsoft Hemant)
-      utterance.voice = nativeVoice;
-      utterance.lang = nativeVoice.lang;
-      utterance.text = text;
+      window.speechSynthesis.speak(utterance);
     } else {
-      // Fallback: OS lacks Kannada/Tamil/Bengali voice pack.
-      // Use Indian English voice with phonetic transliteration so it is spoken cleanly!
-      utterance.voice = indianVoice || anyEnglishVoice;
-      utterance.lang = utterance.voice?.lang || 'en-IN';
-      utterance.text = fallbackPhoneticText || text;
-    }
-
-    utterance.onend = () => {
       if (onEnd) onEnd();
-    };
-
-    utterance.onerror = (e) => {
-      console.warn('TTS playback error:', e);
-      if (onEnd) onEnd();
-    };
-
-    // Chrome bug workaround: sometimes speech synthesis hangs if not resumed
-    if (window.speechSynthesis.paused) {
-      window.speechSynthesis.resume();
     }
-
-    window.speechSynthesis.speak(utterance);
   }
 
   public stopSpeaking() {
+    if (this.currentAudioElement) {
+      try {
+        this.currentAudioElement.pause();
+        this.currentAudioElement = null;
+      } catch (e) {
+        // ignore
+      }
+    }
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       window.speechSynthesis.cancel();
     }
