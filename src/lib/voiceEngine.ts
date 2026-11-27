@@ -300,61 +300,7 @@ export class VoiceEngine {
       }
     }
 
-    // Attempt Puter AI Voice or Browser Synthesizer
-    await this.tryPuterOrSynthesizer(text, scenario, onEnd, onError);
-  }
-
-  private async tryPuterOrSynthesizer(
-    text: string,
-    scenario: AudioScenario | undefined,
-    onEnd: () => void,
-    onError: (err: string) => void
-  ): Promise<void> {
-    // If window.puter is loaded, attempt AI Neural Speech
-    if (typeof window !== 'undefined' && window.puter && window.puter.ai && typeof window.puter.ai.txt2speech === 'function') {
-      try {
-        this.emitPlaybackState({
-          isPlaying: true,
-          source: 'bundled_audio',
-          languageCode: this.currentLanguage.code,
-          languageLabel: `${this.currentLanguage.nativeLabel} (AI Neural Voice)`,
-          scenario
-        });
-
-        // Use AWS Polly neural voice for Hindi/English, or multilingual model for Indic
-        const langCode = this.currentLanguage.code;
-        const audio = langCode === 'hi' || langCode === 'en'
-          ? await window.puter.ai.txt2speech(text.slice(0, 400), {
-              provider: 'aws-polly',
-              engine: 'neural',
-              language: this.currentLanguage.speechLang,
-              voice: langCode === 'hi' ? 'Aditi' : 'Kajal'
-            })
-          : await window.puter.ai.txt2speech(text.slice(0, 400), {
-              provider: 'elevenlabs',
-              model: 'eleven_multilingual_v2'
-            });
-
-        if (audio) {
-          this.activeAudioElement = audio;
-          audio.onended = () => {
-            this.activeAudioElement = null;
-            onEnd();
-          };
-          audio.onerror = () => {
-            this.activeAudioElement = null;
-            this.speakViaSynthesizer(text, scenario, onEnd, onError);
-          };
-          await audio.play();
-          return;
-        }
-      } catch (puterErr) {
-        console.warn('Puter AI voice attempt fell back to system voice:', puterErr);
-        this.activeAudioElement = null;
-      }
-    }
-
-    // Default to browser speech synthesis
+    // Fallback to Native Speech Synthesis
     await this.speakViaSynthesizer(text, scenario, onEnd, onError);
   }
 
