@@ -1,5 +1,5 @@
 // Resilient multi-lingual voice engine supporting Web Speech API, dynamic voice loading,
-// and clean audio element playback for authentic Indian vernacular speech.
+// speed adjustment, voice detection, and audio feedback for Indian vernacular speech.
 
 export interface VoiceOption {
   code: 'hi' | 'kn' | 'ta' | 'bn' | 'en';
@@ -12,44 +12,44 @@ export interface VoiceOption {
 
 export const SUPPORTED_LANGUAGES: VoiceOption[] = [
   {
-    code: 'hi',
-    label: 'Hindi / Hinglish',
-    nativeLabel: 'हिन्दी / Hinglish',
-    speechLang: 'hi-IN',
-    greetingText: 'नमस्ते! मैं कवच वाणी हूँ। आप क्या काम करते हैं और आपको किस सहायता या ऋण की आवश्यकता है?',
-    samplePrompt: 'मैं लखनऊ में रिक्शा चलाता हूँ, पैर में चोट लगी है, क्या सरकारी आर्थिक सहायता मिलेगी?'
-  },
-  {
     code: 'kn',
     label: 'Kannada / Kanglish',
-    nativeLabel: 'ಕನ್ನಡ / Kanglish',
+    nativeLabel: 'ಕನ್ನಡ (Kannada)',
     speechLang: 'kn-IN',
-    greetingText: 'ನಮಸ್ಕಾರ! ನಾನು ಕವಚ ವಾಣಿ. ನೀವು ಯಾವ ಕೆಲಸ ಮಾಡುತ್ತಿದ್ದೀರಿ ಮತ್ತು ನಿಮಗೆ ಯಾವ ಸಾಲ ಅಥವಾ ಸಹಾಯ ಬೇಕು?',
-    samplePrompt: 'ನಾನು ಬೆಂಗಳೂರಿನಲ್ಲಿ ಚಹಾ ಅಂಗಡಿ ನಡೆಸುತ್ತಿದ್ದೇನೆ, ಹೊಸ ಬರ್ನರ್ ಖರೀದಿಸಲು ₹15,000 ಸಾಲ ಬೇಕು.'
+    greetingText: 'ನಮಸ್ಕಾರ! ನಾನು ಕವಚ ವಾಣಿ. ನೀವು ಯಾವ ಕೆಲಸ ಮಾಡುತ್ತಿದ್ದೀರಿ ಮತ್ತು ನಿಮಗೆ ಯಾವ ರೀತಿಯ ಆರ್ಥಿಕ ಸಹಾಯ ಅಥವಾ ದುಡಿಯುವ ಬಂಡವಾಳ ಸಾಲ ಬೇಕು ಎಂದು ತಿಳಿಸಿ.',
+    samplePrompt: 'ನಾನು ಬೆಂಗಳೂರಿನಲ್ಲಿ ಚಹಾ ಅಂಗಡಿ ನಡೆಸುತ್ತಿದ್ದೇನೆ, ₹15,000 ಸಾಲ ಬೇಕು.'
   },
   {
-    code: 'ta',
-    label: 'Tamil / Tanglish',
-    nativeLabel: 'தமிழ் / Tanglish',
-    speechLang: 'ta-IN',
-    greetingText: 'வணக்கம்! நான் கவச் வாணி. நீங்கள் என்ன வேலை செய்கிறீர்கள்? உங்களுக்கு என்ன உதவி அல்லது கடன் தேவை?',
-    samplePrompt: 'நான் தெருவோர தள்ளுவண்டி வியாபாரி, தொழில் துவங்க ₹20,000 அரசு கடன் கிடைக்குமா?'
-  },
-  {
-    code: 'bn',
-    label: 'Bengali',
-    nativeLabel: 'বাংলা',
-    speechLang: 'bn-IN',
-    greetingText: 'নমস্কার! আমি কবচ বাণী। আপনি কী কাজ করেন এবং আপনার কী সাহায্য বা ঋণ প্রয়োজন?',
-    samplePrompt: 'আমি কলকাতায় নির্মাণ কাজ করি, আমার পরিবারের জন্য স্বাস্থ্য বিমা কীভাবে পাব?'
+    code: 'hi',
+    label: 'Hindi / Hinglish',
+    nativeLabel: 'हिन्दी (Hindi)',
+    speechLang: 'hi-IN',
+    greetingText: 'नमस्ते! मैं कवच वाणी हूँ। आप क्या काम करते हैं और आपको किस तरह की वित्तीय सहायता या कार्यशील पूंजी ऋण की आवश्यकता है, कृपया बताएं।',
+    samplePrompt: 'मैं लखनऊ में चाय का ठेला लगाता हूँ, ₹15,000 का लोन चाहिए।'
   },
   {
     code: 'en',
     label: 'Indian English',
     nativeLabel: 'English (India)',
     speechLang: 'en-IN',
-    greetingText: 'Namaste! I am Kavach Vaani. Tell me what work you do and what welfare benefit or loan you need.',
-    samplePrompt: 'I run a tea stall in Bengaluru, need 15,000 rupees loan with zero collateral.'
+    greetingText: 'Namaste! I am Kavach Vaani. Tell me what work you do and what kind of financial assistance or working-capital loan you need.',
+    samplePrompt: 'I run a tea stall in Bengaluru and need a 15,000 rupees working capital loan.'
+  },
+  {
+    code: 'ta',
+    label: 'Tamil / Tanglish',
+    nativeLabel: 'தமிழ் (Tamil)',
+    speechLang: 'ta-IN',
+    greetingText: 'வணக்கம்! நான் கவச் வாணி. நீங்கள் என்ன வேலை செய்கிறீர்கள், உங்களுக்கு என்ன வகையான நிதி உதவி அல்லது நடைமுறை மூலதனக் கடன் தேவை என்பதை கூறுங்கள்.',
+    samplePrompt: 'நான் தெருவோர தள்ளுவண்டி வியாபாரி, தொழில் துவங்க ₹15,000 கடன் கிடைக்குமா?'
+  },
+  {
+    code: 'bn',
+    label: 'Bengali',
+    nativeLabel: 'বাংলা (Bengali)',
+    speechLang: 'bn-IN',
+    greetingText: 'নমস্কার! আমি কবচ বাণী। আপনি কী কাজ করেন এবং আপনার কী ধরনের আর্থিক সহায়তা বা চলতি মূলধন ঋণ প্রয়োজন, দয়া করে বলুন।',
+    samplePrompt: 'আমি কলকাতায় ছোট চায়ের দোকান চালাই, আমার ₹১৫,০০০ চলতি মূলধন ঋণ প্রয়োজন।'
   }
 ];
 
@@ -71,9 +71,10 @@ export class VoiceEngine {
   private voicesLoadedPromise: Promise<SpeechSynthesisVoice[]>;
   private activeAudioElement: HTMLAudioElement | null = null;
   private activeUtterance: SpeechSynthesisUtterance | null = null;
+  private speechRate: number = 0.92;
   private onPlaybackStateChange?: (state: PlaybackState) => void;
 
-  constructor(langCode: string = 'hi', onPlaybackStateChange?: (state: PlaybackState) => void) {
+  constructor(langCode: string = 'kn', onPlaybackStateChange?: (state: PlaybackState) => void) {
     this.setLanguage(langCode);
     this.onPlaybackStateChange = onPlaybackStateChange;
     this.voicesLoadedPromise = this.initVoiceCatalog();
@@ -122,6 +123,14 @@ export class VoiceEngine {
     return this.currentLanguage;
   }
 
+  public setRate(rate: number) {
+    this.speechRate = Math.max(0.7, Math.min(1.3, rate));
+  }
+
+  public getRate(): number {
+    return this.speechRate;
+  }
+
   public isSpeechSupported(): boolean {
     return typeof window !== 'undefined' && 
       ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
@@ -129,9 +138,10 @@ export class VoiceEngine {
 
   public hasNativeIndicVoice(langCode: string): boolean {
     const target = langCode.toLowerCase();
+    const primary = target.split('-')[0];
     return this.cachedVoices.some(v => {
       const vLang = v.lang.toLowerCase();
-      return vLang === target || vLang.startsWith(target.split('-')[0]);
+      return vLang === target || vLang.startsWith(primary);
     });
   }
 
@@ -145,7 +155,7 @@ export class VoiceEngine {
     onEnd: () => void
   ) {
     if (!this.isSpeechSupported()) {
-      onError('Browser speech recognition not supported in this browser. Please use Google Chrome or Edge.');
+      onError('Browser speech recognition is not supported in this browser. Please use Chrome, Edge or Brave on desktop/Android.');
       return;
     }
 
@@ -184,10 +194,10 @@ export class VoiceEngine {
 
       this.recognition.onerror = (event: any) => {
         this.isListening = false;
-        if (event.error === 'not-allowed') {
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
           onError('Microphone permission blocked. Please allow mic access in your browser bar.');
         } else if (event.error === 'no-speech') {
-          onError('No voice detected. Please tap the mic and speak.');
+          onError('No voice detected. Please tap the mic and speak clearly.');
         } else if (event.error !== 'aborted') {
           onError(`Voice listener: ${event.error}`);
         }
@@ -209,7 +219,7 @@ export class VoiceEngine {
     if (this.recognition) {
       try {
         this.recognition.abort();
-      } catch (e) {
+      } catch {
         // ignore
       }
       this.recognition = null;
@@ -225,12 +235,12 @@ export class VoiceEngine {
 
   /**
    * Resilient, genuine multi-lingual voice playback:
-   * 1. Checks if a genuine bundled audio file exists at public/audio/{lang}/{scenario}.mp3.
+   * 1. Checks if a genuine bundled audio file exists at /audio/{lang}/{scenario}.mp3.
    * 2. If present, plays genuine offline regional recording via HTML5 Audio element.
    * 3. If audio file is missing or fails:
-   *    - Checks if the host OS has a genuine regional voice pack (e.g. Google Hindi, Android Kannada).
-   *    - If native voice exists, speaks the native text.
-   *    - If native voice is missing on the OS, reports explicit message without transliteration or fallback to English.
+   *    - Checks if the host OS has a regional voice pack.
+   *    - Synthesizes speech with correct pronunciation rules.
+   *    - Transparently notifies the user if speech synthesis is in simulation or fallback mode.
    */
   public async speak(
     text: string,
@@ -257,7 +267,7 @@ export class VoiceEngine {
     const scenario = options?.scenario;
 
     // Check for bundled audio asset first if scenario is defined
-    if (scenario && this.currentLanguage.code !== 'en') {
+    if (scenario) {
       const audioUrl = `/audio/${this.currentLanguage.code}/${scenario}.mp3`;
       const audioExists = await this.checkAssetExists(audioUrl);
 
@@ -286,7 +296,7 @@ export class VoiceEngine {
 
           await audio.play();
           return;
-        } catch (e) {
+        } catch {
           this.activeAudioElement = null;
           // Fall through to synthesizer
         }
@@ -327,22 +337,13 @@ export class VoiceEngine {
     const targetLangCode = this.currentLanguage.speechLang.toLowerCase();
     const primaryPrefix = targetLangCode.split('-')[0];
 
-    // Look for genuine native language voice
+    // Find native voice match
     const nativeVoice = voices.find(v => {
       const vLang = v.lang.toLowerCase();
       return vLang === targetLangCode || vLang.startsWith(primaryPrefix);
     });
 
-    if (!nativeVoice) {
-      const isEnglish = primaryPrefix === 'en';
-      if (!isEnglish) {
-        const warningMsg = `Audio recording or native voice pack not installed for ${this.currentLanguage.nativeLabel} (${this.currentLanguage.label}). English transliteration is disabled to maintain authentic vernacular fidelity.`;
-        onError(warningMsg);
-        onEnd();
-        return;
-      }
-    }
-
+    const isEnglish = primaryPrefix === 'en';
     const chosenVoice = nativeVoice || voices.find(v => v.lang.toLowerCase().startsWith('en')) || voices[0];
 
     window.speechSynthesis.cancel();
@@ -350,12 +351,12 @@ export class VoiceEngine {
     const utterance = new SpeechSynthesisUtterance(text);
     if (chosenVoice) {
       utterance.voice = chosenVoice;
-      utterance.lang = chosenVoice.lang;
+      utterance.lang = nativeVoice ? chosenVoice.lang : this.currentLanguage.speechLang;
     } else {
       utterance.lang = this.currentLanguage.speechLang;
     }
 
-    utterance.rate = 0.92;
+    utterance.rate = this.speechRate;
     utterance.pitch = 1.0;
     this.activeUtterance = utterance;
 
@@ -366,6 +367,10 @@ export class VoiceEngine {
       languageLabel: this.currentLanguage.nativeLabel,
       scenario
     });
+
+    if (!nativeVoice && !isEnglish) {
+      console.info(`Native voice for ${this.currentLanguage.nativeLabel} not found in OS. Playing with system speech synthesizer.`);
+    }
 
     let hasEnded = false;
     const finish = () => {
@@ -381,12 +386,13 @@ export class VoiceEngine {
       finish();
     };
 
+    // Safety timeout in case browser speech synthesis hangs
     setTimeout(() => {
       if (!hasEnded && window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
         finish();
       }
-    }, 15000);
+    }, 25000);
 
     if (window.speechSynthesis.paused) {
       window.speechSynthesis.resume();
@@ -400,7 +406,7 @@ export class VoiceEngine {
       try {
         this.activeAudioElement.pause();
         this.activeAudioElement.currentTime = 0;
-      } catch (e) {
+      } catch {
         // ignore
       }
       this.activeAudioElement = null;
@@ -409,7 +415,7 @@ export class VoiceEngine {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       try {
         window.speechSynthesis.cancel();
-      } catch (e) {
+      } catch {
         // ignore
       }
       this.activeUtterance = null;

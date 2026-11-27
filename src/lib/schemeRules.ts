@@ -16,6 +16,8 @@ export interface Scheme {
   nameNative: Record<string, string>;
   category: 'street-vendor' | 'construction' | 'gig-delivery' | 'health' | 'all';
   benefitAmountSummary: string;
+  benefitAmount: string; // for backward compatibility & direct card rendering
+  benefitDescription: string;
   tranches?: SchemeTranche[];
   interestSubsidyInfo?: {
     ratePercent: number;
@@ -37,6 +39,7 @@ export interface Scheme {
     localAuthorityNative: Record<string, string>;
     verifiedHelpline?: string;
   };
+  grievanceHelpline: string;
   protectionAct: string;
   sourceReferences: {
     authority: string;
@@ -59,6 +62,8 @@ export const SCHEMES_DATABASE: Scheme[] = [
     },
     category: 'street-vendor',
     benefitAmountSummary: 'Up to ₹15,000 (1st loan) ➔ ₹25,000 (2nd loan) ➔ ₹50,000 (3rd loan)',
+    benefitAmount: 'Working capital loan up to ₹15,000 (1st), ₹25,000 (2nd), ₹50,000 (3rd)',
+    benefitDescription: 'Collateral-free working capital credit in 3 tranches with 7% p.a. interest subsidy on timely repayment.',
     tranches: [
       {
         stage: 1,
@@ -155,8 +160,10 @@ export const SCHEMES_DATABASE: Scheme[] = [
         hi: 'शहरी स्थानीय निकाय (नगर निगम / नगरपालिका) / टाउन वेंडिंग कमेटी (TVC)',
         ta: 'நகர்ப்புற உள்ளாட்சி அமைப்பு (மாநகராட்சி / நகராட்சி) / TVC',
         bn: 'নগর স্থানীয় পুরসভা / টাউন ভেন্ডিং কমিটি (TVC)'
-      }
+      },
+      verifiedHelpline: '1800-11-1979 / Contact Local ULB'
     },
+    grievanceHelpline: '1800-11-1979 / Contact Local ULB',
     protectionAct: 'The Street Vendors (Protection of Livelihood and Regulation of Street Vending) Act, 2014 (Section 18(3))',
     sourceReferences: {
       authority: 'Ministry of Housing and Urban Affairs (MoHUA), Government of India',
@@ -176,7 +183,9 @@ export const SCHEMES_DATABASE: Scheme[] = [
       bn: 'ই-শ্রম জাতীয় অসংগঠিত শ্রমিক কার্ড'
     },
     category: 'all',
-    benefitAmountSummary: 'Universal UAN + Accidental Risk Cover under PMSBY guidelines',
+    benefitAmountSummary: 'Universal UAN + Social Security Scheme Integration',
+    benefitAmount: 'Universal UAN Card with statutory social security linkages',
+    benefitDescription: 'Direct access to social security pensions, accidental cover under PMSBY rules, and national registry.',
     criteriaSummary: 'Unorganized workers aged 16-59 not enrolled in EPFO or ESIC.',
     requiredDocuments: [
       {
@@ -209,8 +218,10 @@ export const SCHEMES_DATABASE: Scheme[] = [
         hi: 'जिला श्रम विभाग / आधिकारिक सीएससी',
         ta: 'மாவட்ட தொழிலாளர் நலத்துறை / CSC',
         bn: 'জেলা শ্রম দফতর / সিএসসি'
-      }
+      },
+      verifiedHelpline: '14434 (Toll-Free National Helpline)'
     },
+    grievanceHelpline: '14434 (Toll-Free National Helpline)',
     protectionAct: 'Unorganised Workers Social Security Act, 2008',
     sourceReferences: {
       authority: 'Ministry of Labour and Employment, Government of India',
@@ -231,6 +242,8 @@ export const SCHEMES_DATABASE: Scheme[] = [
     },
     category: 'health',
     benefitAmountSummary: 'Up to ₹5,00,000 / year cashless hospitalization per eligible family',
+    benefitAmount: 'Up to ₹5,00,000 per family per year for secondary/tertiary hospitalization',
+    benefitDescription: 'Cashless, paperless access to health services at empanelled public and private hospitals across India.',
     criteriaSummary: 'Identified families under SECC deprived rural & designated urban occupational criteria, subject to state validation.',
     requiredDocuments: [
       {
@@ -263,8 +276,10 @@ export const SCHEMES_DATABASE: Scheme[] = [
         hi: 'जिला अस्पताल आयुष्मान मित्र',
         ta: 'மாவட்ட அரசு மருத்துவமனை ஆயுஷ்மான் மித்ரா',
         bn: 'জেলা হাসপাতাল আয়ুষ্মান মিত্র'
-      }
+      },
+      verifiedHelpline: '14555 (Toll-Free Helpline)'
     },
+    grievanceHelpline: '14555 (Toll-Free Helpline)',
     protectionAct: 'National Health Authority Guidelines',
     sourceReferences: {
       authority: 'National Health Authority (NHA), Government of India',
@@ -284,7 +299,9 @@ export const SCHEMES_DATABASE: Scheme[] = [
       bn: 'ভবন ও নির্মাণ শ্রমিক কল্যাণ পর্ষদ'
     },
     category: 'construction',
-    benefitAmountSummary: 'Statutory welfare grants (education scholarships, tool assistance, maternity benefits)',
+    benefitAmountSummary: 'Statutory welfare grants (scholarships, tool kits, safety assistance, maternity)',
+    benefitAmount: 'Statutory grants including ₹20,000+ tool assistance and education scholarships',
+    benefitDescription: 'Welfare benefits administered by State BOCW Welfare Boards for registered construction laborers.',
     criteriaSummary: 'Engaged in construction work for not less than 90 days in preceding 12 months, registered with State BOCW Board.',
     requiredDocuments: [
       {
@@ -317,8 +334,10 @@ export const SCHEMES_DATABASE: Scheme[] = [
         hi: 'राज्य भवन सन्निर्माण कर्मकार बोर्ड / जिला श्रम कार्यालय',
         ta: 'மாநில கட்டுமான நல வாரியம் / தொழிலாளர் நல அலுவலகம்',
         bn: 'রাজ্য নির্মাণ শ্রমিক কল্যাণ বোর্ড'
-      }
+      },
+      verifiedHelpline: 'State Labour Department / District Office'
     },
+    grievanceHelpline: 'State Labour Department / District Office',
     protectionAct: 'Building and Other Construction Workers (RECS) Act, 1996',
     sourceReferences: {
       authority: 'Ministry of Labour and Employment & State Welfare Boards',
@@ -348,43 +367,87 @@ export function matchSchemeByIntent(userSpokenText: string, lang = 'hi'): {
     amount?: string;
   } = {};
 
-  // Comprehensive multi-dialect vocabulary
+  // Comprehensive multi-dialect & native Indic script vocabulary
   if (
+    // English & Romanized Hinglish/Kanglish/Tanglish
     text.includes('vendor') || text.includes('tea') || text.includes('chai') || text.includes('stall') || 
     text.includes('thela') || text.includes('street') || text.includes('rehari') || text.includes('vyaapari') || 
     text.includes('dukaan') || text.includes('fruit') || text.includes('vegetable') || text.includes('vyapara') ||
-    text.includes('angadi') || text.includes('thalluvandi') || text.includes('hawker')
+    text.includes('angadi') || text.includes('thalluvandi') || text.includes('hawker') || text.includes('tiffin') ||
+    // Kannada Script
+    text.includes('ಬೀದಿ') || text.includes('ವ್ಯಾಪಾರ') || text.includes('ಚಹಾ') || text.includes('ಅಂಗಡಿ') || text.includes('ಹಣ್ಣು') ||
+    // Hindi Script
+    text.includes('स्ट्रीट') || text.includes('वेंडर') || text.includes('ठेला') || text.includes('दुकान') || text.includes('रेहड़ी') || text.includes('फल') || text.includes('सब्जी') ||
+    // Tamil Script
+    text.includes('தெருவோர') || text.includes('வியாபாரி') || text.includes('தள்ளுவண்டி') || text.includes('தேனீர்') ||
+    // Bengali Script
+    text.includes('হকার') || text.includes('চা') || text.includes('দোকান') || text.includes('সবজি') || text.includes('ফল')
   ) {
     entities.occupation = 'Street Vendor / Hawker';
   } else if (
     text.includes('construct') || text.includes('mason') || text.includes('labour') || text.includes('mazdoor') || 
     text.includes('building') || text.includes('cement') || text.includes('painting') || text.includes('kuli') || 
-    text.includes('coolie') || text.includes('kattada')
+    text.includes('coolie') || text.includes('kattada') || text.includes('taj') ||
+    // Indic Scripts
+    text.includes('ಕಟ್ಟಡ') || text.includes('ಕಾರ್ಮಿಕ') || text.includes('ನಿರ್ಮಾಣ') ||
+    text.includes('मजदूर') || text.includes('निर्माण') || text.includes('कारीगर') ||
+    text.includes('கட்டுமான') || text.includes('தொழிலாளி') ||
+    text.includes('নির্মাণ') || text.includes('শ্রমিক')
   ) {
     entities.occupation = 'Construction Worker';
   } else if (
     text.includes('auto') || text.includes('rickshaw') || text.includes('delivery') || text.includes('zomato') || 
-    text.includes('swiggy') || text.includes('driver') || text.includes('ola') || text.includes('uber')
+    text.includes('swiggy') || text.includes('driver') || text.includes('ola') || text.includes('uber') || text.includes('porter') ||
+    // Indic Scripts
+    text.includes('ಆಟೋ') || text.includes('ಚಾಲಕ') ||
+    text.includes('ऑटो') || text.includes('चालक') || text.includes('रिक्शा') ||
+    text.includes('ஆட்டோ') || text.includes('ஓட்டுநர்') ||
+    text.includes('অটো') || text.includes('চালক')
   ) {
     entities.occupation = 'Gig / Transport Worker';
   } else if (
     text.includes('maid') || text.includes('domestic') || text.includes('cooking') || text.includes('housekeep') || 
-    text.includes('kamwali') || text.includes('kelasa')
+    text.includes('kamwali') || text.includes('kelasa') || text.includes('bai') ||
+    // Indic Scripts
+    text.includes('ಮನೆಗೆಲಸ') || text.includes('कामवाली') || text.includes('গৃহকর্মী')
   ) {
     entities.occupation = 'Domestic Worker';
   }
 
-  // Location extraction
-  const cities = ['bengaluru', 'bangalore', 'lucknow', 'delhi', 'patna', 'mumbai', 'varanasi', 'kolkata', 'chennai', 'hyderabad', 'kanpur', 'ranchi'];
-  for (const city of cities) {
-    if (text.includes(city)) {
-      entities.location = city.charAt(0).toUpperCase() + city.slice(1);
+  // Location extraction mapping (both English and native Indic names to canonical English title)
+  const cityMap: Record<string, string> = {
+    'bengaluru': 'Bengaluru',
+    'bangalore': 'Bengaluru',
+    'ಬೆಂಗಳೂರು': 'Bengaluru',
+    'lucknow': 'Lucknow',
+    'लखनऊ': 'Lucknow',
+    'delhi': 'Delhi',
+    'दिल्ली': 'Delhi',
+    'chennai': 'Chennai',
+    'சென்னை': 'Chennai',
+    'kolkata': 'Kolkata',
+    'কলকাতা': 'Kolkata',
+    'patna': 'Patna',
+    'पटना': 'Patna',
+    'mumbai': 'Mumbai',
+    'मुंबई': 'Mumbai',
+    'varanasi': 'Varanasi',
+    'hyderabad': 'Hyderabad',
+    'kanpur': 'Kanpur',
+    'ranchi': 'Ranchi',
+    'mysuru': 'Mysuru',
+    'mysore': 'Mysuru'
+  };
+
+  for (const [key, canonical] of Object.entries(cityMap)) {
+    if (text.includes(key)) {
+      entities.location = canonical;
       break;
     }
   }
 
   // Amount extraction
-  const amountMatch = text.match(/(\d+[\d,]*\s*(?:thousand|k|rupees|hazar|sau|lakh|crore)?)/i);
+  const amountMatch = text.match(/(\d+[\d,]*\s*(?:thousand|k|rupees|hazar|sau|lakh|crore|ರೂಪಾಯಿ|रुपये|ரூபாய்|টাকা)?)/i);
   if (amountMatch) {
     entities.amount = amountMatch[1];
   }
@@ -393,23 +456,32 @@ export function matchSchemeByIntent(userSpokenText: string, lang = 'hi'): {
   if (
     text.includes('loan') || text.includes('karz') || text.includes('sala') || text.includes('saala') || 
     text.includes('kadan') || text.includes('capital') || text.includes('money') || text.includes('paisa') || 
-    text.includes('rokkha') || text.includes('duddu')
+    text.includes('rokkha') || text.includes('duddu') || text.includes('ಬಂಡವಾಳ') || text.includes('ಸಾಲ') ||
+    text.includes('ऋण') || text.includes('लोन') || text.includes('पूंजी') || text.includes('கடன்') || text.includes('ঋণ')
   ) {
     entities.need = 'Working Capital / Business Loan';
   } else if (
     text.includes('hospital') || text.includes('fracture') || text.includes('bimari') || text.includes('illness') || 
-    text.includes('treatment') || text.includes('medical') || text.includes('chikitsa') || text.includes('maruthuvam')
+    text.includes('treatment') || text.includes('medical') || text.includes('chikitsa') || text.includes('maruthuvam') ||
+    text.includes('ಆಸ್ಪತ್ರೆ') || text.includes('ಚಿಕಿತ್ಸೆ') || text.includes('ಇಲಾಜು') ||
+    text.includes('अस्पताल') || text.includes('इलाज') || text.includes('बीमारी') ||
+    text.includes('மருத்துவமனை') || text.includes('சிகிச்சை') ||
+    text.includes('হাসপাতাল') || text.includes('চিকিৎসা')
   ) {
     entities.need = 'Healthcare & Hospitalization Coverage';
   } else if (
     text.includes('pension') || text.includes('insurance') || text.includes('bima') || text.includes('accident') || 
-    text.includes('security')
+    text.includes('security') || text.includes('ವಿಮೆ') || text.includes('பீமா') || text.includes('বীমা')
   ) {
     entities.need = 'Social Security & Life Insurance';
   }
 
   // Prioritized statutory matching
-  if (entities.need === 'Healthcare & Hospitalization Coverage' || text.includes('hospital') || text.includes('fracture') || text.includes('bimari')) {
+  if (
+    entities.need === 'Healthcare & Hospitalization Coverage' || 
+    text.includes('hospital') || text.includes('fracture') || text.includes('bimari') || 
+    text.includes('ಆಸ್ಪತ್ರೆ') || text.includes('अस्पताल') || text.includes('மருத்துவமனை') || text.includes('হাসপাতাল')
+  ) {
     return {
       scheme: SCHEMES_DATABASE[2], // PM-JAY
       matchedReason: 'Preliminary match: Hospitalization & medical care requirement identified. Subject to official verification.',
@@ -417,7 +489,11 @@ export function matchSchemeByIntent(userSpokenText: string, lang = 'hi'): {
     };
   }
 
-  if (entities.occupation === 'Construction Worker' || text.includes('building') || text.includes('mazdoor') || text.includes('cement')) {
+  if (
+    entities.occupation === 'Construction Worker' || 
+    text.includes('building') || text.includes('mazdoor') || text.includes('cement') ||
+    text.includes('ಕಟ್ಟಡ') || text.includes('निर्माण') || text.includes('கட்டுமான') || text.includes('নির্মাণ')
+  ) {
     return {
       scheme: SCHEMES_DATABASE[3], // BOCW
       matchedReason: 'Preliminary match: Construction trade welfare qualification. Subject to 90-day verification by State Board.',
@@ -425,7 +501,12 @@ export function matchSchemeByIntent(userSpokenText: string, lang = 'hi'): {
     };
   }
 
-  if (entities.occupation === 'Street Vendor / Hawker' || entities.need === 'Working Capital / Business Loan' || text.includes('loan') || text.includes('stall') || text.includes('chai') || text.includes('15000')) {
+  if (
+    entities.occupation === 'Street Vendor / Hawker' || 
+    entities.need === 'Working Capital / Business Loan' || 
+    text.includes('loan') || text.includes('stall') || text.includes('chai') || text.includes('15000') ||
+    text.includes('ಬೀದಿ') || text.includes('ठेला') || text.includes('தள்ளுவண்டி') || text.includes('হকার')
+  ) {
     return {
       scheme: SCHEMES_DATABASE[0], // PM SVANidhi
       matchedReason: 'Preliminary match: Urban street vendor seeking working capital. May be eligible for progressive loans starting up to ₹15,000.',
