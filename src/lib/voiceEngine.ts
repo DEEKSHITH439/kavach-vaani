@@ -235,12 +235,9 @@ export class VoiceEngine {
 
   /**
    * Resilient, genuine multi-lingual voice playback:
-   * 1. Checks if a genuine bundled audio file exists at /audio/{lang}/{scenario}.mp3.
-   * 2. If present, plays genuine offline regional recording via HTML5 Audio element.
-   * 3. If audio file is missing or fails:
-   *    - Checks if the host OS has a regional voice pack.
-   *    - Synthesizes speech with correct pronunciation rules.
-   *    - Transparently notifies the user if speech synthesis is in simulation or fallback mode.
+   * 1. Checks if Puter.js AI Voice is available (free neural TTS without keys).
+   * 2. Checks if bundled audio file exists at /audio/{lang}/{scenario}.mp3.
+   * 3. Fallbacks to native browser speech synthesis.
    */
   public async speak(
     text: string,
@@ -291,19 +288,73 @@ export class VoiceEngine {
 
           audio.onerror = () => {
             this.activeAudioElement = null;
-            this.speakViaSynthesizer(text, scenario, onEnd, onError);
+            this.tryPuterOrSynthesizer(text, scenario, onEnd, onError);
           };
 
           await audio.play();
           return;
         } catch {
           this.activeAudioElement = null;
-          // Fall through to synthesizer
+          // Fall through to Puter / Synthesizer
         }
       }
     }
 
-    // Fallback to Native Speech Synthesis
+    // Attempt Puter AI Voice or Browser Synthesizer
+    await this.tryPuterOrSynthesizer(text, scenario, onEnd, onError);
+  }
+
+  private async tryPuterOrSynthesizer(
+    text: string,
+    scenario: AudioScenario | undefined,
+    onEnd: () => void,
+    onError: (err: string) => void
+  ): Promise<void> {
+    // If window.puter is loaded, attempt AI Neural Speech
+    if (typeof window !== 'undefined' && window.puter && window.puter.ai && typeof window.puter.ai.txt2speech === 'function') {
+      try {
+        this.emitPlaybackState({
+          isPlaying: true,
+          source: 'bundled_audio',
+          languageCode: this.currentLanguage.code,
+          languageLabel: `${this.currentLanguage.nativeLabel} (AI Neural Voice)`,
+          scenario
+        });
+
+        // Use AWS Polly neural voice for Hindi/English, or multilingual model for Indic
+        const langCode = this.currentLanguage.code;
+        const audio = langCode === 'hi' || langCode === 'en'
+          ? await window.puter.ai.txt2speech(text.slice(0, 400), {
+              provider: 'aws-polly',
+              engine: 'neural',
+              language: this.currentLanguage.speechLang,
+              voice: langCode === 'hi' ? 'Aditi' : 'Kajal'
+            })
+          : await window.puter.ai.txt2speech(text.slice(0, 400), {
+              provider: 'elevenlabs',
+              model: 'eleven_multilingual_v2'
+            });
+
+        if (audio) {
+          this.activeAudioElement = audio;
+          audio.onended = () => {
+            this.activeAudioElement = null;
+            onEnd();
+          };
+          audio.onerror = () => {
+            this.activeAudioElement = null;
+            this.speakViaSynthesizer(text, scenario, onEnd, onError);
+          };
+          await audio.play();
+          return;
+        }
+      } catch (puterErr) {
+        console.warn('Puter AI voice attempt fell back to system voice:', puterErr);
+        this.activeAudioElement = null;
+      }
+    }
+
+    // Default to browser speech synthesis
     await this.speakViaSynthesizer(text, scenario, onEnd, onError);
   }
 

@@ -9,6 +9,7 @@ import { SchemeCard } from './components/SchemeCard';
 import { AudioRightsCard } from './components/AudioRightsCard';
 import { LiveApplicationCard } from './components/LiveApplicationCard';
 import { DownloadCenter } from './components/DownloadCenter';
+import { ApplicationTracker } from './components/ApplicationTracker';
 import { FormSubmissionData } from './lib/documentGenerator';
 import { 
   Shield, 
@@ -46,6 +47,7 @@ export function App() {
   // Matched Scheme
   const [matchedScheme, setMatchedScheme] = useState<Scheme | null>(null);
   const [matchReason, setMatchReason] = useState<string>('');
+  const [showTrackerModal, setShowTrackerModal] = useState<boolean>(false);
 
   // Voice Interview Fields - Privacy Safe: Stores minimal necessary fields with masking
   const [interviewStep, setInterviewStep] = useState<number>(0);
@@ -81,7 +83,14 @@ export function App() {
       isSpeakingRef.current = state.isPlaying;
     });
 
+    // Warm, welcoming automated introduction on startup
+    const welcomeTimer = setTimeout(() => {
+      const welcomeText = initialLocale.scripts.greeting;
+      speakResponse(welcomeText, 'greeting');
+    }, 800);
+
     return () => {
+      clearTimeout(welcomeTimer);
       if (voiceEngineRef.current) {
         voiceEngineRef.current.stopListening();
         voiceEngineRef.current.stopSpeaking();
@@ -180,8 +189,26 @@ export function App() {
     const text = rawText.trim();
     if (!text) return;
 
+    // Intent Stage Error Handling & Guidance
     if (stage === 'INTENT') {
       const match = matchSchemeByIntent(text, selectedLanguage.code);
+      
+      // If user said something vague or unrelated (e.g. only 1-2 generic words or no scheme matched)
+      if (!match.scheme) {
+        const errorFeedback = selectedLanguage.code === 'kn'
+          ? "ನಾನು ಸರ್ಕಾರಿ ಸಾಲ ಮತ್ತು ಕಲ್ಯಾಣ ಯೋಜನೆಗಳಲ್ಲಿ ಸಹಾಯ ಮಾಡುತ್ತೇನೆ. ಉದಾಹರಣೆಗೆ: 'ನಾನು ಚಹಾ ಅಂಗಡಿ ನಡೆಸುತ್ತಿದ್ದೇನೆ, ₹15,000 ಸಾಲ ಬೇಕು' ಎಂದು ಹೇಳಿ."
+          : selectedLanguage.code === 'hi'
+          ? "मैं सरकारी ऋण और कल्याण योजनाओं में सहायता करता हूँ। उदाहरण के लिए कहें: 'मैं चाय की दुकान चलाता हूँ, ₹15,000 का लोन चाहिए'।"
+          : selectedLanguage.code === 'ta'
+          ? "நான் அரசு கடன் மற்றும் நலத்திட்டங்களில் உதவுகிறேன். உதாரணமாக: 'நான் டீ கடை நடத்துகிறேன், ₹15,000 கடன் வேண்டும்' என்று சொல்லுங்கள்."
+          : selectedLanguage.code === 'bn'
+          ? "আমি সরকারি ঋণ ও কল্যাণমূলক প্রকল্পে সাহায্য করি। উদাহরণস্বরূপ বলুন: 'আমি চায়ের দোকান চালাই, ₹১৫,০০০ ঋণ চাই'।"
+          : "I help with government welfare schemes and vendor loans. For example, say: 'I run a tea stall and need ₹15,000 loan'.";
+        
+        speakResponse(errorFeedback);
+        return;
+      }
+
       setMatchedScheme(match.scheme);
       setMatchReason(match.matchedReason);
 
@@ -261,6 +288,16 @@ export function App() {
     let sanitizedAnswer = answer;
     if (currentKey === 'aadhaarLast4' || currentKey === 'bankAccountLast4') {
       const digits = answer.replace(/\D/g, '');
+      if (digits.length < 4 && digits.length > 0) {
+        // Helpful voice correction if user provided fewer than 4 digits
+        const digitsError = selectedLanguage.code === 'kn'
+          ? "ದಯವಿಟ್ಟು ಕನಿಷ್ಠ ಕೊನೆಯ 4 ಅಂಕಿಗಳನ್ನು ಸ್ಪಷ್ಟವಾಗಿ ಹೇಳಿ."
+          : selectedLanguage.code === 'hi'
+          ? "कृपया सुरक्षा के लिए अंतिम 4 अंक स्पष्ट रूप से बताएं।"
+          : "Please speak the last 4 digits clearly for verification.";
+        speakResponse(digitsError);
+        return;
+      }
       sanitizedAnswer = digits.length >= 4 ? digits.slice(-4) : digits || answer;
     }
 
@@ -422,6 +459,15 @@ export function App() {
         </div>
 
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowTrackerModal(true)}
+            className="p-2 sm:px-3 rounded-xl bg-orange-950/40 border border-orange-500/40 hover:border-orange-500 text-orange-300 hover:text-white transition-all text-xs flex items-center gap-1.5 active:scale-95"
+            title="Track Government Application Status"
+          >
+            <Radio className="w-4 h-4 text-orange-400" />
+            <span className="hidden sm:inline text-[11px] font-semibold">Track Status</span>
+          </button>
+
           <button
             onClick={() => setShowHelpModal(true)}
             className="p-2 sm:px-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 transition-all text-xs flex items-center gap-1.5 active:scale-95"
@@ -727,6 +773,25 @@ export function App() {
             >
               {t.modal.gotItBtn}
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Live Application Tracker Modal */}
+      {showTrackerModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="max-w-xl w-full relative">
+            <button
+              onClick={() => setShowTrackerModal(false)}
+              className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center border border-slate-700 shadow-lg text-sm hover:bg-slate-700 z-10"
+            >
+              ✕
+            </button>
+            <ApplicationTracker
+              t={t}
+              initialApplicationId={applicationId || 'KV-DEMO-782914'}
+              languageCode={selectedLanguage.code}
+            />
           </div>
         </div>
       )}
