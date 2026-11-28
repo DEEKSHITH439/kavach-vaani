@@ -396,11 +396,21 @@ export class VoiceEngine {
 
     // Safety timeout in case browser speech synthesis hangs
     setTimeout(() => {
-      if (!hasEnded && window.speechSynthesis.speaking) {
+      if (!hasEnded && typeof window !== 'undefined' && 'speechSynthesis' in window && window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
         finish();
       }
-    }, 25000);
+    }, 35000);
+
+    utterance.onstart = () => {
+      this.emitPlaybackState({
+        isPlaying: true,
+        source: 'system_tts',
+        languageCode: this.currentLanguage.code,
+        languageLabel: this.currentLanguage.nativeLabel,
+        scenario
+      });
+    };
 
     if (window.speechSynthesis.paused) {
       window.speechSynthesis.resume();

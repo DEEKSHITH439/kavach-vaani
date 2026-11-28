@@ -587,7 +587,7 @@ export function App() {
         <div className="w-full flex flex-col items-center justify-center py-1">
           <VoiceVisualizer
             isListening={isListening}
-            isSpeaking={isSpeaking}
+            isSpeaking={isSpeaking || playbackState.isPlaying}
             onClick={handleMicToggle}
             statusLabel={statusMessage}
           />
