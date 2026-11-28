@@ -110,25 +110,32 @@ export function App() {
     setSelectedLanguage(lang);
     const newLocale = getLocale(lang.code);
     setT(newLocale);
-    setStatusMessage(newLocale.voiceEngine.tapMicToSpeak);
+    setStatusMessage(newLocale.voiceEngine.speakingToYou);
 
     if (voiceEngineRef.current) {
       voiceEngineRef.current.setLanguage(lang.code);
     }
 
     const greetingText = newLocale.scripts.greeting;
-    speakResponse(greetingText, 'greeting');
+    speakResponse(greetingText, 'greeting', undefined, newLocale);
   };
 
-  const speakResponse = (text: string, scenario?: AudioScenario, onDone?: () => void) => {
+  const speakResponse = (
+    text: string, 
+    scenario?: AudioScenario, 
+    onDone?: () => void,
+    customLocale?: LocaleTranslations
+  ) => {
     if (!voiceEngineRef.current) return;
+
+    const currentLocale = customLocale || t;
 
     voiceEngineRef.current.stopListening();
     setIsListening(false);
 
     setIsSpeaking(true);
     isSpeakingRef.current = true;
-    setStatusMessage(t.voiceEngine.speakingToYou);
+    setStatusMessage(currentLocale.voiceEngine.speakingToYou);
 
     voiceEngineRef.current.speak(text, {
       scenario,
@@ -136,7 +143,7 @@ export function App() {
         setTimeout(() => {
           setIsSpeaking(false);
           isSpeakingRef.current = false;
-          setStatusMessage(t.voiceEngine.tapMicToReply);
+          setStatusMessage(currentLocale.voiceEngine.tapMicToReply);
           if (onDone) onDone();
         }, 400);
       },
