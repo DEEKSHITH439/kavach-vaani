@@ -649,10 +649,10 @@ export function App() {
                     </div>
                     <div className="min-w-0">
                       <div className="text-xs sm:text-sm font-black text-slate-900 truncate">
-                        {t.scenarios.teaVendor.split('(')[0].replace(/[🍵\s]+$/, '').trim()}
+                        {t.scenarios?.teaVendor ? t.scenarios.teaVendor.split('(')[0].replace(/[🍵\s]+$/, '').trim() : 'Tea Vendor'}
                       </div>
                       <div className="text-[11px] text-slate-600 truncate mt-0.5">
-                        {t.scenarios.teaVendor.includes('(') ? t.scenarios.teaVendor.split('(')[1].replace(')', '') : 'PM SVANidhi Loan'}
+                        {t.scenarios?.teaVendor && t.scenarios.teaVendor.includes('(') ? t.scenarios.teaVendor.split('(')[1].replace(')', '') : 'PM SVANidhi Loan'}
                       </div>
                     </div>
                   </div>
@@ -670,10 +670,10 @@ export function App() {
                     </div>
                     <div className="min-w-0">
                       <div className="text-xs sm:text-sm font-black text-slate-900 truncate">
-                        {t.scenarios.autoDriver.split('(')[0].replace(/[🛺\s]+$/, '').trim()}
+                        {t.scenarios?.autoDriver ? t.scenarios.autoDriver.split('(')[0].replace(/[🛺\s]+$/, '').trim() : 'Auto Driver'}
                       </div>
                       <div className="text-[11px] text-slate-600 truncate mt-0.5">
-                        {t.scenarios.autoDriver.includes('(') ? t.scenarios.autoDriver.split('(')[1].replace(')', '') : 'PM-JAY Coverage'}
+                        {t.scenarios?.autoDriver && t.scenarios.autoDriver.includes('(') ? t.scenarios.autoDriver.split('(')[1].replace(')', '') : 'PM-JAY Coverage'}
                       </div>
                     </div>
                   </div>
@@ -691,10 +691,10 @@ export function App() {
                     </div>
                     <div className="min-w-0">
                       <div className="text-xs sm:text-sm font-black text-slate-900 truncate">
-                        {t.scenarios.constructionWorker.split('(')[0].replace(/[🧱\s]+$/, '').trim()}
+                        {t.scenarios?.constructionWorker ? t.scenarios.constructionWorker.split('(')[0].replace(/[🧱\s]+$/, '').trim() : 'Construction Worker'}
                       </div>
                       <div className="text-[11px] text-slate-600 truncate mt-0.5">
-                        {t.scenarios.constructionWorker.includes('(') ? t.scenarios.constructionWorker.split('(')[1].replace(')', '') : 'BOCW Welfare, Insurance'}
+                        {t.scenarios?.constructionWorker && t.scenarios.constructionWorker.includes('(') ? t.scenarios.constructionWorker.split('(')[1].replace(')', '') : 'BOCW Welfare, Insurance'}
                       </div>
                     </div>
                   </div>
