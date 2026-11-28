@@ -185,11 +185,46 @@ export function App() {
     );
   };
 
+  const isGreetingQuery = (input: string): boolean => {
+    const clean = input.toLowerCase().trim().replace(/[.,!?;:]/g, '');
+    const greetingWords = [
+      'hi', 'hello', 'hey', 'namaste', 'namaskara', 'namaskaram', 'vanakkam', 'nomoshkar',
+      'halo', 'hai', 'hlo', 'hii', 'hiii', 'good morning', 'good afternoon', 'good evening',
+      'नमस्ते', 'हेलो', 'हाय', 'ನಮಸ್ಕಾರ', 'ಹಲೋ', 'வணக்கம்', 'ஹலோ', 'నమస్కారం', 'హలో', 'নমস্কার', 'হ্যালো'
+    ];
+    return greetingWords.some(w => clean === w || clean.startsWith(w + ' ') || clean.endsWith(' ' + w));
+  };
+
+  const getGreetingReply = (langCode: string): string => {
+    switch (langCode) {
+      case 'kn':
+        return 'ನಮಸ್ಕಾರ! ನಾನು ಕವಚ ವಾಣಿ. ನಾನು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಬಹುದು? ನಿಮ್ಮ ಕೆಲಸ ಮತ್ತು ಸಾಲ ಅಥವಾ ಸರ್ಕಾರದ ನೆರವು ಬೇಕಿದ್ದರೆ ತಿಳಿಸಿ.';
+      case 'hi':
+        return 'नमस्ते! मैं कवच वाणी हूँ। मैं आपकी क्या मदद कर सकती हूँ? कृपया बताएं कि आप क्या काम करते हैं और आपको किस योजना या सहायता की आवश्यकता है।';
+      case 'te':
+        return 'నమస్కారం! నేను కవచ్ వాణి. నేను మీకు ఎలా సహాయపడగలను? మీ వ్యాపారం లేదా అవసరమైన ప్రభుత్వ పథకం గురించి చెప్పండి.';
+      case 'ta':
+        return 'வணக்கம்! நான் கவச் வாணி. உங்களுக்கு நான் எவ்வாறு உதவ முடியும்? உங்கள் தொழில் மற்றும் தேவைப்படும் அரசு உதவி பற்றி கூறுங்கள்.';
+      case 'bn':
+        return 'নমস্কার! আমি কবচ বাণী। আমি আপনাকে কীভাবে সাহায্য করতে পারি? আপনার কাজ এবং কী ধরনের সরকারি সহায়তা প্রয়োজন বলুন।';
+      case 'en':
+      default:
+        return 'Hello! I am Kavach Vaani. How can I help you today? Please tell me what work you do and what government scheme or loan assistance you need.';
+    }
+  };
+
   const processUserVoiceInput = (rawText: string) => {
     const text = rawText.trim();
     if (!text) return;
 
     if (stage === 'INTENT') {
+      // Check if user is saying Hi / Hello / Greeting
+      if (isGreetingQuery(text)) {
+        const reply = getGreetingReply(selectedLanguage.code);
+        speakResponse(reply, 'greeting');
+        return;
+      }
+
       const match = matchSchemeByIntent(text, selectedLanguage.code);
       setMatchedScheme(match.scheme);
       setMatchReason(match.matchedReason);

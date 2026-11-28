@@ -18,7 +18,9 @@ export const VoiceVisualizer: React.FC<VoiceVisualizerProps> = ({
     <div className="flex flex-col items-center justify-center my-3 sm:my-5">
       <div className="relative flex items-center justify-center">
         {/* Soft emerald glow aura in background as in reference */}
-        <div className="absolute w-44 h-44 sm:w-56 sm:h-56 rounded-full bg-emerald-100/70 pointer-events-none" />
+        <div className={`absolute w-44 h-44 sm:w-56 sm:h-56 rounded-full transition-all duration-300 pointer-events-none ${
+          isSpeaking ? 'bg-emerald-200/80 animate-pulse' : 'bg-emerald-100/70'
+        }`} />
 
         {/* Soft ripple aura rings when listening */}
         {isListening && (
@@ -28,15 +30,15 @@ export const VoiceVisualizer: React.FC<VoiceVisualizerProps> = ({
           </>
         )}
 
-        {/* Emerald aura when assistant is speaking */}
+        {/* Pulsing emerald rings when assistant is speaking */}
         {isSpeaking && (
           <>
-            <div className="absolute w-52 h-52 rounded-full bg-emerald-600/25 animate-ping pointer-events-none" />
-            <div className="absolute w-44 h-44 rounded-full bg-emerald-600/35 animate-pulse pointer-events-none" />
+            <div className="absolute w-56 h-56 rounded-full bg-emerald-500/20 animate-ping pointer-events-none" />
+            <div className="absolute w-48 h-48 rounded-full bg-emerald-500/30 animate-pulse pointer-events-none" />
           </>
         )}
 
-        {/* Central Round Green Mic Button - exact match to reference image */}
+        {/* Central Round Green Button - shows Speaker icon when speaking, Mic icon when listening/idle */}
         <button
           onClick={onClick}
           aria-label={isListening ? "Stop listening" : isSpeaking ? "Stop speaking" : "Tap to speak"}
@@ -44,24 +46,24 @@ export const VoiceVisualizer: React.FC<VoiceVisualizerProps> = ({
             isListening
               ? 'bg-[#046A38] text-white ring-4 ring-emerald-300 scale-105 animate-pulse shadow-emerald-700/30'
               : isSpeaking
-              ? 'bg-[#046A38] text-white ring-4 ring-emerald-400 scale-105 shadow-emerald-700/30'
+              ? 'bg-[#046A38] text-white ring-4 ring-emerald-300 scale-105 shadow-emerald-700/40'
               : 'bg-[#046A38] hover:bg-[#03542c] text-white shadow-emerald-800/20 hover:scale-102'
           }`}
         >
           {isSpeaking ? (
-            <Volume2 className="w-10 h-10 sm:w-11 sm:h-11 animate-bounce text-white stroke-[2.2]" />
+            <Volume2 className="w-11 h-11 sm:w-12 sm:h-12 animate-pulse text-white stroke-[2.4]" />
           ) : (
-            <Mic className={`w-10 h-10 sm:w-11 sm:h-11 ${isListening ? 'animate-pulse' : ''} text-white stroke-[2.2]`} />
+            <Mic className={`w-11 h-11 sm:w-12 sm:h-12 ${isListening ? 'animate-pulse' : ''} text-white stroke-[2.4]`} />
           )}
           <span className="text-[11px] font-black uppercase tracking-wider mt-1.5 text-white">
-            {isListening ? 'LISTENING' : isSpeaking ? 'SPEAKING' : 'TAP TO SPEAK'}
+            {isSpeaking ? 'SPEAKING' : isListening ? 'LISTENING' : 'TAP TO SPEAK'}
           </span>
         </button>
       </div>
 
       {/* Visual rhythmic soundwave bars (active when listening or speaking) */}
       {(isListening || isSpeaking) && (
-        <div className="h-8 flex items-center justify-center gap-1.5 mt-4 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200">
+        <div className="h-8 flex items-center justify-center gap-1.5 mt-4 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 shadow-2xs">
           {[30, 65, 95, 50, 100, 75, 85, 40, 90, 35, 70, 45].map((h, i) => (
             <div
               key={i}
