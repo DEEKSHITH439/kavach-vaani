@@ -17,37 +17,58 @@ export const VoiceVisualizer: React.FC<VoiceVisualizerProps> = ({
   return (
     <div className="flex flex-col items-center justify-center my-3 sm:my-5">
       <div className="relative flex items-center justify-center">
-        {/* Soft emerald glow aura in background as in reference */}
-        <div className={`absolute w-44 h-44 sm:w-56 sm:h-56 rounded-full transition-all duration-300 pointer-events-none ${
-          isSpeaking ? 'bg-emerald-200/80 animate-pulse' : 'bg-emerald-100/70'
-        }`} />
+        {/* Indian Flag Tricolor Outer Aura ("Outlet")
+            Layers: Saffron (Kesari #FF671F / #FF9933) on outer glow,
+            Pure White (#FFFFFF) middle circle with Navy accent,
+            and India Green (#046A38 / #138808) inner border */}
+        
+        {/* Layer 1: Outermost Saffron / Kesari Glow Aura */}
+        <div
+          className={`absolute w-52 h-52 sm:w-64 sm:h-64 rounded-full transition-all duration-500 pointer-events-none p-1.5 ${
+            isSpeaking
+              ? 'bg-gradient-to-tr from-[#FF671F]/50 via-white/40 to-[#046A38]/50 animate-spin [animation-duration:8s] blur-[2px]'
+              : isListening
+              ? 'bg-gradient-to-t from-[#046A38]/40 via-white/50 to-[#FF671F]/50 animate-pulse'
+              : 'bg-gradient-to-b from-[#FF671F]/30 via-white/40 to-[#046A38]/30 shadow-lg'
+          }`}
+        />
 
-        {/* Soft ripple aura rings when listening */}
+        {/* Layer 2: Flag Tricolor Concentric Disc - Saffron top, White middle, Green bottom */}
+        <div className="absolute w-44 h-44 sm:w-56 sm:h-56 rounded-full overflow-hidden flex flex-col pointer-events-none shadow-md border-2 border-white/80">
+          <div className="flex-1 bg-[#FF671F] opacity-35" />
+          <div className="flex-1 bg-white opacity-95 flex items-center justify-center">
+            {/* Subtle Ashoka Blue Ring accent in white band */}
+            <div className="w-full h-[2px] bg-[#06038D]/25" />
+          </div>
+          <div className="flex-1 bg-[#046A38] opacity-35" />
+        </div>
+
+        {/* Dynamic ripple rings when listening (Tricolor pulses) */}
         {isListening && (
           <>
-            <div className="absolute w-52 h-52 rounded-full bg-emerald-500/20 animate-ping pointer-events-none" />
-            <div className="absolute w-44 h-44 rounded-full bg-emerald-500/30 animate-pulse pointer-events-none" />
+            <div className="absolute w-56 h-56 rounded-full border-2 border-[#FF671F]/60 animate-ping pointer-events-none" />
+            <div className="absolute w-48 h-48 rounded-full border-2 border-[#046A38]/60 animate-pulse pointer-events-none" />
           </>
         )}
 
-        {/* Pulsing emerald rings when assistant is speaking */}
+        {/* Pulsing rings when assistant is speaking */}
         {isSpeaking && (
           <>
-            <div className="absolute w-56 h-56 rounded-full bg-emerald-500/20 animate-ping pointer-events-none" />
-            <div className="absolute w-48 h-48 rounded-full bg-emerald-500/30 animate-pulse pointer-events-none" />
+            <div className="absolute w-60 h-60 rounded-full border-2 border-[#FF671F]/70 animate-ping pointer-events-none" />
+            <div className="absolute w-50 h-50 rounded-full border-2 border-[#06038D]/60 animate-pulse pointer-events-none" />
           </>
         )}
 
-        {/* Central Round Green Button - shows Speaker icon when speaking, Mic icon when listening/idle */}
+        {/* Central Round Red Button - Requested Red color with White text/icon */}
         <button
           onClick={onClick}
           aria-label={isListening ? "Stop listening" : isSpeaking ? "Stop speaking" : "Tap to speak"}
-          className={`relative z-10 w-32 h-32 sm:w-36 sm:h-36 rounded-full flex flex-col items-center justify-center transition-all duration-300 active:scale-95 cursor-pointer shadow-lg ${
+          className={`relative z-10 w-32 h-32 sm:w-36 sm:h-36 rounded-full flex flex-col items-center justify-center transition-all duration-300 active:scale-95 cursor-pointer shadow-xl ${
             isSpeaking
-              ? 'bg-[#046A38] text-white ring-4 ring-emerald-300 scale-105 shadow-emerald-700/40'
+              ? 'bg-[#DC2626] text-white ring-4 ring-amber-300 scale-105 shadow-red-700/50'
               : isListening
-              ? 'bg-[#046A38] text-white ring-4 ring-emerald-300 scale-105 animate-pulse shadow-emerald-700/30'
-              : 'bg-[#046A38] hover:bg-[#03542c] text-white shadow-emerald-800/20 hover:scale-102'
+              ? 'bg-[#DC2626] text-white ring-4 ring-orange-300 scale-105 animate-pulse shadow-red-700/40'
+              : 'bg-[#DC2626] hover:bg-[#B91C1C] text-white shadow-red-800/35 hover:scale-102 ring-2 ring-white/60'
           }`}
         >
           {isSpeaking ? (
@@ -55,7 +76,7 @@ export const VoiceVisualizer: React.FC<VoiceVisualizerProps> = ({
           ) : (
             <Mic className={`w-11 h-11 sm:w-12 sm:h-12 ${isListening ? 'animate-pulse' : ''} text-white stroke-[2.4]`} />
           )}
-          <span className="text-[11px] font-black uppercase tracking-wider mt-1.5 text-white">
+          <span className="text-[11px] font-black uppercase tracking-wider mt-1.5 text-white drop-shadow-sm">
             {isSpeaking ? 'SPEAKING' : isListening ? 'LISTENING' : 'TAP TO SPEAK'}
           </span>
         </button>
@@ -63,11 +84,11 @@ export const VoiceVisualizer: React.FC<VoiceVisualizerProps> = ({
 
       {/* Visual rhythmic soundwave bars (active when listening or speaking) */}
       {(isListening || isSpeaking) && (
-        <div className="h-8 flex items-center justify-center gap-1.5 mt-4 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 shadow-2xs">
+        <div className="h-8 flex items-center justify-center gap-1.5 mt-4 px-4 py-1.5 rounded-full bg-red-50 border border-red-200 shadow-2xs">
           {[30, 65, 95, 50, 100, 75, 85, 40, 90, 35, 70, 45].map((h, i) => (
             <div
               key={i}
-              className="w-1 rounded-full bg-[#046A38] transition-all duration-150"
+              className="w-1 rounded-full bg-[#DC2626] transition-all duration-150"
               style={{
                 height: `${Math.max(20, h * 0.85)}%`,
                 animationDuration: `${0.5 + (i * 0.08)}s`
@@ -79,7 +100,7 @@ export const VoiceVisualizer: React.FC<VoiceVisualizerProps> = ({
 
       {/* Spoken Status pill label when active */}
       {statusLabel && (isListening || isSpeaking) && (
-        <div className="mt-3 px-4 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800 text-center max-w-sm">
+        <div className="mt-3 px-4 py-1 rounded-full bg-red-50 border border-red-200 text-xs font-semibold text-red-800 text-center max-w-sm">
           {statusLabel}
         </div>
       )}
