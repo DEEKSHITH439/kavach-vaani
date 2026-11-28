@@ -22,7 +22,8 @@ const LANGUAGE_BADGES: Record<string, { letter: string; bg: string; text: string
 export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   currentLanguage,
   onSelect,
-  disabled
+  disabled,
+  t
 }) => {
   return (
     <div className="w-full flex flex-col items-center" role="region" aria-label="Language selection">
