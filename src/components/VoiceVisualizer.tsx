@@ -15,74 +15,72 @@ export const VoiceVisualizer: React.FC<VoiceVisualizerProps> = ({
   statusLabel
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center my-4 sm:my-6">
+    <div className="flex flex-col items-center justify-center my-3 sm:my-5">
       <div className="relative flex items-center justify-center">
+        {/* Soft emerald glow aura in background as in reference */}
+        <div className="absolute w-44 h-44 sm:w-56 sm:h-56 rounded-full bg-emerald-100/70 pointer-events-none" />
+
         {/* Soft ripple aura rings when listening */}
         {isListening && (
           <>
-            <div className="absolute w-52 h-52 rounded-full bg-orange-500/15 animate-ping pointer-events-none" />
-            <div className="absolute w-40 h-40 rounded-full bg-orange-500/25 animate-pulse pointer-events-none" />
+            <div className="absolute w-52 h-52 rounded-full bg-emerald-500/20 animate-ping pointer-events-none" />
+            <div className="absolute w-44 h-44 rounded-full bg-emerald-500/30 animate-pulse pointer-events-none" />
           </>
         )}
 
         {/* Emerald aura when assistant is speaking */}
         {isSpeaking && (
           <>
-            <div className="absolute w-48 h-48 rounded-full bg-emerald-500/20 animate-ping pointer-events-none" />
-            <div className="absolute w-38 h-38 rounded-full bg-emerald-500/25 animate-pulse pointer-events-none" />
+            <div className="absolute w-52 h-52 rounded-full bg-emerald-600/25 animate-ping pointer-events-none" />
+            <div className="absolute w-44 h-44 rounded-full bg-emerald-600/35 animate-pulse pointer-events-none" />
           </>
         )}
 
-        {/* Outer ambient decorative ring */}
-        <div className="absolute w-36 h-36 rounded-full bg-gradient-to-tr from-orange-400/20 via-amber-300/10 to-emerald-400/20 blur-md pointer-events-none" />
-
-        {/* Central Big Interactive Mic Button with Official Emerald Glow */}
+        {/* Central Round Green Mic Button - exact match to reference image */}
         <button
           onClick={onClick}
-          aria-label={isListening ? "Stop listening" : isSpeaking ? "Stop speaking" : "Tap and speak"}
-          className={`relative z-10 w-28 h-28 sm:w-32 sm:h-32 rounded-full flex flex-col items-center justify-center transition-all duration-300 active:scale-95 cursor-pointer shadow-lg ${
+          aria-label={isListening ? "Stop listening" : isSpeaking ? "Stop speaking" : "Tap to speak"}
+          className={`relative z-10 w-32 h-32 sm:w-36 sm:h-36 rounded-full flex flex-col items-center justify-center transition-all duration-300 active:scale-95 cursor-pointer shadow-lg ${
             isListening
-              ? 'bg-gradient-to-tr from-orange-600 to-amber-500 text-white shadow-xl scale-105 ring-4 ring-orange-400 animate-pulse'
+              ? 'bg-[#046A38] text-white ring-4 ring-emerald-300 scale-105 animate-pulse shadow-emerald-700/30'
               : isSpeaking
-              ? 'bg-gradient-to-tr from-emerald-700 to-teal-600 text-white shadow-xl scale-105 ring-4 ring-emerald-400'
-              : 'bg-emerald-700 hover:bg-emerald-800 text-white shadow-emerald-900/30 ring-4 ring-emerald-500/30 hover:scale-102'
+              ? 'bg-[#046A38] text-white ring-4 ring-emerald-400 scale-105 shadow-emerald-700/30'
+              : 'bg-[#046A38] hover:bg-[#03542c] text-white shadow-emerald-800/20 hover:scale-102'
           }`}
         >
           {isSpeaking ? (
-            <Volume2 className="w-11 h-11 sm:w-12 sm:h-12 animate-bounce drop-shadow" />
+            <Volume2 className="w-10 h-10 sm:w-11 sm:h-11 animate-bounce text-white stroke-[2.2]" />
           ) : (
-            <Mic className={`w-11 h-11 sm:w-12 sm:h-12 ${isListening ? 'animate-pulse' : ''} drop-shadow`} />
+            <Mic className={`w-10 h-10 sm:w-11 sm:h-11 ${isListening ? 'animate-pulse' : ''} text-white stroke-[2.2]`} />
           )}
-          <span className="text-[11px] font-extrabold uppercase tracking-wider mt-1 text-white">
-            {isListening ? 'Listening' : isSpeaking ? 'Speaking' : 'Tap & Speak'}
+          <span className="text-[11px] font-black uppercase tracking-wider mt-1.5 text-white">
+            {isListening ? 'LISTENING' : isSpeaking ? 'SPEAKING' : 'TAP TO SPEAK'}
           </span>
         </button>
       </div>
 
-      {/* Visual rhythmic soundwave bars (Clean Emerald Waveform) */}
-      <div className="h-9 flex items-center justify-center gap-1.5 mt-5 px-5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 shadow-sm">
-        {[30, 65, 95, 50, 100, 75, 85, 40, 90, 35, 70, 45].map((h, i) => (
-          <div
-            key={i}
-            className={`w-1.5 rounded-full transition-all duration-150 ${
-              isListening
-                ? 'bg-orange-500'
-                : isSpeaking
-                ? 'bg-emerald-600'
-                : 'bg-emerald-300'
-            }`}
-            style={{
-              height: isListening || isSpeaking ? `${Math.max(25, (h * (isListening ? 0.95 : 0.75)))}%` : '8px',
-              animationDuration: `${0.5 + (i * 0.08)}s`
-            }}
-          />
-        ))}
-      </div>
+      {/* Visual rhythmic soundwave bars (active when listening or speaking) */}
+      {(isListening || isSpeaking) && (
+        <div className="h-8 flex items-center justify-center gap-1.5 mt-4 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200">
+          {[30, 65, 95, 50, 100, 75, 85, 40, 90, 35, 70, 45].map((h, i) => (
+            <div
+              key={i}
+              className="w-1 rounded-full bg-[#046A38] transition-all duration-150"
+              style={{
+                height: `${Math.max(20, h * 0.85)}%`,
+                animationDuration: `${0.5 + (i * 0.08)}s`
+              }}
+            />
+          ))}
+        </div>
+      )}
 
-      {/* Spoken Status pill label */}
-      <div className="mt-3 px-5 py-1.5 rounded-full bg-white border border-slate-200 text-xs sm:text-sm font-semibold text-slate-700 text-center max-w-sm shadow-sm">
-        {statusLabel}
-      </div>
+      {/* Spoken Status pill label when active */}
+      {statusLabel && (isListening || isSpeaking) && (
+        <div className="mt-3 px-4 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800 text-center max-w-sm">
+          {statusLabel}
+        </div>
+      )}
     </div>
   );
 };

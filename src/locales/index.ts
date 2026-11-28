@@ -7,11 +7,11 @@ import { te } from './te';
 
 export const locales: Record<'en' | 'kn' | 'hi' | 'ta' | 'bn' | 'te', LocaleTranslations> = {
   en,
-  hi,
   kn,
-  te,
+  hi,
   ta,
-  bn
+  bn,
+  te
 };
 
 export function getLocale(code: string): LocaleTranslations {

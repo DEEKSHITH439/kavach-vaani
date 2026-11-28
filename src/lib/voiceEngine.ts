@@ -22,7 +22,7 @@ export const SUPPORTED_LANGUAGES: VoiceOption[] = [
   {
     code: 'hi',
     label: 'Hindi / Hinglish',
-    nativeLabel: 'हिन्दी (Hindi)',
+    nativeLabel: 'हिंदी',
     speechLang: 'hi-IN',
     greetingText: 'नमस्ते! मैं कवच वाणी हूँ। आप क्या काम करते हैं और आपको किस तरह की वित्तीय सहायता या कार्यशील पूंजी ऋण की आवश्यकता है, कृपया बताएं।',
     samplePrompt: 'मैं लखनऊ में चाय का ठेला लगाता हूँ, ₹15,000 का लोन चाहिए।'
@@ -30,7 +30,7 @@ export const SUPPORTED_LANGUAGES: VoiceOption[] = [
   {
     code: 'kn',
     label: 'Kannada / Kanglish',
-    nativeLabel: 'ಕನ್ನಡ (Kannada)',
+    nativeLabel: 'ಕನ್ನಡ',
     speechLang: 'kn-IN',
     greetingText: 'ನಮಸ್ಕಾರ! ನಾನು ಕವಚ ವಾಣಿ. ನೀವು ಯಾವ ಕೆಲಸ ಮಾಡುತ್ತಿದ್ದೀರಿ ಮತ್ತು ನಿಮಗೆ ಯಾವ ರೀತಿಯ ಆರ್ಥಿಕ ಸಹಾಯ ಅಥವಾ ದುಡಿಯುವ ಬಂಡವಾಳ ಸಾಲ ಬೇಕು ಎಂದು ತಿಳಿಸಿ.',
     samplePrompt: 'ನಾನು ಬೆಂಗಳೂರಿನಲ್ಲಿ ಚಹಾ ಅಂಗಡಿ ನಡೆಸುತ್ತಿದ್ದೇನೆ, ₹15,000 ಸಾಲ ಬೇಕು.'
@@ -38,15 +38,15 @@ export const SUPPORTED_LANGUAGES: VoiceOption[] = [
   {
     code: 'te',
     label: 'Telugu',
-    nativeLabel: 'తెలుగు (Telugu)',
+    nativeLabel: 'తెలుగు',
     speechLang: 'te-IN',
-    greetingText: 'నమస్కారం! నేను కవచ్ వాణి. మీరు ఏ పని చేస్తున్నారు మరియు మీకు ఎటువంటి ఆర్థిక సహాయం లేదా వ్యాపార మూలధన రుణం కావాలో తెలియజేయండి.',
-    samplePrompt: 'నేను హైదరాబాద్‌లో టీ దుకాణం నడుపుతున్నాను, ₹15,000 వ్యాపార రుణం కావాలి.'
+    greetingText: 'నమస్కారం! నేను కవచ్ వాణి. మీరు ఏ పని చేస్తున్నారు మరియు మీకు ఎలాంటి ఆర్థిక సహాయం లేదా వర్కింగ్ క్యాపిటల్ రుణం కావాలో చెప్పండి.',
+    samplePrompt: 'నేను టీ దుకాణం నడుపుతున్నాను, ₹15,000 రుణం కావాలి.'
   },
   {
     code: 'ta',
     label: 'Tamil / Tanglish',
-    nativeLabel: 'தமிழ் (Tamil)',
+    nativeLabel: 'தமிழ்',
     speechLang: 'ta-IN',
     greetingText: 'வணக்கம்! நான் கவச் வாணி. நீங்கள் என்ன வேலை செய்கிறீர்கள், உங்களுக்கு என்ன வகையான நிதி உதவி அல்லது நடைமுறை மூலதனக் கடன் தேவை என்பதை கூறுங்கள்.',
     samplePrompt: 'நான் தெருவோர தள்ளுவண்டி வியாபாரி, தொழில் துவங்க ₹15,000 கடன் கிடைக்குமா?'
@@ -54,7 +54,7 @@ export const SUPPORTED_LANGUAGES: VoiceOption[] = [
   {
     code: 'bn',
     label: 'Bengali',
-    nativeLabel: 'বাংলা (Bengali)',
+    nativeLabel: 'বাংলা',
     speechLang: 'bn-IN',
     greetingText: 'নমস্কার! আমি কবচ বাণী। আপনি কী কাজ করেন এবং আপনার কী ধরনের আর্থিক সহায়তা বা চলতি মূলধন ঋণ প্রয়োজন, দয়া করে বলুন।',
     samplePrompt: 'আমি কলকাতায় ছোট চায়ের দোকান চালাই, আমার ₹১৫,০০০ চলতি মূলধন ঋণ প্রয়োজন।'
@@ -243,9 +243,12 @@ export class VoiceEngine {
 
   /**
    * Resilient, genuine multi-lingual voice playback:
-   * 1. Checks if Puter.js AI Voice is available (free neural TTS without keys).
-   * 2. Checks if bundled audio file exists at /audio/{lang}/{scenario}.mp3.
-   * 3. Fallbacks to native browser speech synthesis.
+   * 1. Checks if a genuine bundled audio file exists at /audio/{lang}/{scenario}.mp3.
+   * 2. If present, plays genuine offline regional recording via HTML5 Audio element.
+   * 3. If audio file is missing or fails:
+   *    - Checks if the host OS has a regional voice pack.
+   *    - Synthesizes speech with correct pronunciation rules.
+   *    - Transparently notifies the user if speech synthesis is in simulation or fallback mode.
    */
   public async speak(
     text: string,
@@ -296,14 +299,14 @@ export class VoiceEngine {
 
           audio.onerror = () => {
             this.activeAudioElement = null;
-            this.tryPuterOrSynthesizer(text, scenario, onEnd, onError);
+            this.speakViaSynthesizer(text, scenario, onEnd, onError);
           };
 
           await audio.play();
           return;
         } catch {
           this.activeAudioElement = null;
-          // Fall through to Puter / Synthesizer
+          // Fall through to synthesizer
         }
       }
     }
