@@ -29,7 +29,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       {/* Pill Badge Header: Choose Voice Dialect / Select Language */}
       <div className="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-[#046A38] text-white text-xs font-bold tracking-wide shadow-sm mb-4">
         <Languages className="w-3.5 h-3.5" aria-hidden="true" />
-        <span>Choose Voice Dialect / Select Language</span>
+        <span>{t.languageSelectLabel || 'Choose Voice Dialect / Select Language'}</span>
       </div>
 
       {/* Language Cards Row */}

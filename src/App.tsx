@@ -440,10 +440,10 @@ export function App() {
       {/* 1. Top MoHUA Bar (Dark Green Bar across top full width) */}
       <div className="w-full bg-[#046A38] text-white py-2 px-4 sm:px-8 flex items-center justify-between text-xs font-semibold shadow-xs">
         <div className="flex items-center gap-2">
-          <span>Ministry of Housing & Urban Affairs (MoHUA)</span>
+          <span>{selectedLanguage.code === 'hi' ? 'आवासन और शहरी कार्य मंत्रालय (MoHUA)' : selectedLanguage.code === 'kn' ? 'ವಸತಿ ಮತ್ತು ನಗರ ವ್ಯವಹಾರಗಳ ಸಚಿವಾಲಯ (MoHUA)' : selectedLanguage.code === 'te' ? 'గృహనిర్మాణ మరియు పట్టణ వ్యవహారాల మంత్రిత్వ శాఖ (MoHUA)' : selectedLanguage.code === 'ta' ? 'வீட்டுவசதி மற்றும் நகர்ப்புற விவகாரங்கள் அமைச்சகம் (MoHUA)' : selectedLanguage.code === 'bn' ? 'গৃহায়ণ ও নগর বিষয়ক মন্ত্রক (MoHUA)' : 'Ministry of Housing & Urban Affairs (MoHUA)'}</span>
         </div>
         <div className="flex items-center gap-1.5 text-xs text-white/90">
-          <span>कवच वाणी</span>
+          <span>{t.appTitle}</span>
           <span className="text-white/60">|</span>
           <span>Kavach Vaani</span>
         </div>
@@ -458,14 +458,14 @@ export function App() {
           <div>
             <div className="flex items-center gap-2.5">
               <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900">
-                Kavach Vaani
+                {t.appTitle}
               </h1>
               <span className="text-xs font-extrabold px-3 py-0.5 rounded-full bg-emerald-100 text-[#046A38] border border-emerald-300">
-                Aapki Suraksha, Aapki Awaaz
+                {selectedLanguage.code === 'kn' ? 'ನಿಮ್ಮ ರಕ್ಷಣೆ, ನಿಮ್ಮ ಧ್ವನಿ' : selectedLanguage.code === 'hi' ? 'आपकी सुरक्षा, आपकी आवाज़' : selectedLanguage.code === 'te' ? 'మీ రక్షణ, మీ స్వరం' : selectedLanguage.code === 'ta' ? 'உங்கள் பாதுகாப்பு, உங்கள் குரல்' : selectedLanguage.code === 'bn' ? 'আপনার সুরক্ষা, আপনার কণ্ঠ' : 'Aapki Suraksha, Aapki Awaaz'}
               </span>
             </div>
             <p className="text-xs text-slate-500 font-medium mt-0.5">
-              AI-Powered Voice Companion for Street Vendors & Informal Workers
+              {t.appSubtitle}
             </p>
           </div>
         </div>
@@ -477,7 +477,7 @@ export function App() {
             className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs cursor-pointer active:scale-95"
           >
             <Radio className="w-4 h-4 text-[#046A38]" />
-            <span>Track Status</span>
+            <span>{selectedLanguage.code === 'kn' ? 'ಸ್ಥಿತಿ ಪರಿಶೀಲಿಸಿ' : selectedLanguage.code === 'hi' ? 'स्थिति जांचें' : selectedLanguage.code === 'te' ? 'స్థితిని ట్రాక్ చేయండి' : selectedLanguage.code === 'ta' ? 'நிலையை சரிபார்க்க' : selectedLanguage.code === 'bn' ? 'স্থিতি যাচাই করুন' : 'Track Status'}</span>
           </button>
 
           {/* How It Works Button */}
@@ -486,7 +486,7 @@ export function App() {
             className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs cursor-pointer active:scale-95"
           >
             <Info className="w-4 h-4 text-slate-600" />
-            <span>How It Works</span>
+            <span>{t.howItWorks}</span>
           </button>
 
           {/* Reset Conversation Button */}
@@ -512,15 +512,15 @@ export function App() {
 
           {/* Pill Badge */}
           <div className="inline-block px-4 py-1 rounded-full bg-emerald-100/90 border border-emerald-300 text-[#046A38] text-[11px] font-black uppercase tracking-wider mb-3">
-            YOUR VOICE. YOUR RIGHTS. YOUR ACCESS.
+            {t.tagline}
           </div>
 
           <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-            Welcome to Kavach Vaani!
+            {selectedLanguage.code === 'kn' ? 'ಕವಚ ವಾಣಿಗೆ ಸುಸ್ವಾಗತ!' : selectedLanguage.code === 'hi' ? 'कवच वाणी में आपका स्वागत है!' : selectedLanguage.code === 'te' ? 'కవచ్ వాణికి స్వాగతం!' : selectedLanguage.code === 'ta' ? 'கவச் வாணிக்கு நல்வரவு!' : selectedLanguage.code === 'bn' ? 'কবচ বাণীতে আপনাকে স্বাগতম!' : 'Welcome to Kavach Vaani!'}
           </h2>
 
           <p className="text-sm sm:text-base text-slate-600 mt-2 max-w-xl mx-auto font-medium leading-relaxed">
-            Discover government welfare schemes and understand your benefits through a simple conversation in your own language.
+            {t.supportingText}
           </p>
         </div>
 
@@ -531,7 +531,7 @@ export function App() {
             <div className="flex items-center gap-2">
               <span className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${stage === 'INTENT' ? 'bg-[#046A38] text-white font-black shadow-xs' : 'bg-slate-100 text-slate-500'}`}>
                 <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">1</span>
-                <span>Speak Need</span>
+                <span>{t.steps.speakNeed.replace(/^\d+\.\s*/, '')}</span>
               </span>
               <span className="text-slate-400 font-bold">➔</span>
             </div>
@@ -540,7 +540,7 @@ export function App() {
             <div className="flex items-center gap-2">
               <span className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${stage === 'SCHEME_MATCHED' ? 'bg-[#046A38] text-white font-black shadow-xs' : 'bg-slate-100 text-slate-500'}`}>
                 <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">2</span>
-                <span>Scheme Match</span>
+                <span>{t.steps.schemeMatch.replace(/^\d+\.\s*/, '')}</span>
               </span>
               <span className="text-slate-400 font-bold">➔</span>
             </div>
@@ -549,7 +549,7 @@ export function App() {
             <div className="flex items-center gap-2">
               <span className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${stage === 'CONSENT' ? 'bg-[#046A38] text-white font-black shadow-xs' : 'bg-slate-100 text-slate-500'}`}>
                 <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">3</span>
-                <span>Consent Check</span>
+                <span>{t.steps.consentCheck.replace(/^\d+\.\s*/, '')}</span>
               </span>
               <span className="text-slate-400 font-bold">➔</span>
             </div>
@@ -558,7 +558,7 @@ export function App() {
             <div className="flex items-center gap-2">
               <span className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${(stage === 'INTERVIEW' || stage === 'CONFIRMATION') ? 'bg-[#046A38] text-white font-black shadow-xs' : 'bg-slate-100 text-slate-500'}`}>
                 <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">4</span>
-                <span>Details</span>
+                <span>{t.steps.details.replace(/^\d+\.\s*/, '')}</span>
               </span>
               <span className="text-slate-400 font-bold">➔</span>
             </div>
@@ -567,7 +567,7 @@ export function App() {
             <div className="flex items-center gap-2">
               <span className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${stage === 'RIGHTS_CARD' ? 'bg-[#046A38] text-white font-black shadow-xs' : 'bg-slate-100 text-slate-500'}`}>
                 <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">5</span>
-                <span>Rights & Downloads</span>
+                <span>{t.steps.rightsCard.replace(/^\d+\.\s*/, '')}</span>
               </span>
             </div>
           </div>
@@ -590,9 +590,14 @@ export function App() {
             isSpeaking={isSpeaking || playbackState.isPlaying}
             onClick={handleMicToggle}
             statusLabel={statusMessage}
+            labels={{
+              tapToSpeak: t.voiceEngine.tapAndSpeak,
+              listening: t.voiceEngine.listening,
+              speaking: t.voiceEngine.speaking
+            }}
           />
           <p className="text-xs sm:text-sm text-slate-700 text-center font-medium mt-1">
-            Tap the mic and speak naturally in your dialect.
+            {t.voiceEngine.tapMicToSpeak}
           </p>
 
           {/* Transcript / speech prompt pill matching reference */}
@@ -603,10 +608,10 @@ export function App() {
                 <span className="w-0.5 h-4 bg-[#046A38] rounded-full"></span>
                 <span className="w-0.5 h-2 bg-[#046A38] rounded-full"></span>
               </span>
-              <span>What we heard:</span>
+              <span>{t.voiceEngine.whatWeHeard}</span>
             </span>
             <span className="text-slate-500 italic truncate font-normal">
-              {spokenTranscript ? `"${spokenTranscript}"` : 'Your speech will appear here...'}
+              {spokenTranscript ? `"${spokenTranscript}"` : (selectedLanguage.code === 'kn' ? 'ನಿಮ್ಮ ಧ್ವನಿ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ...' : selectedLanguage.code === 'hi' ? 'आपकी आवाज़ यहाँ दिखाई देगी...' : selectedLanguage.code === 'te' ? 'మీ మాటలు ఇక్కడ కనిపిస్తాయి...' : selectedLanguage.code === 'ta' ? 'உங்கள் பேச்சு இங்கே தோன்றும்...' : selectedLanguage.code === 'bn' ? 'আপনার কথা এখানে দেখা যাবে...' : 'Your speech will appear here...')}
             </span>
           </div>
         </div>
@@ -621,7 +626,7 @@ export function App() {
             >
               <div className="flex items-center gap-2 w-full justify-center pl-4">
                 <span>💡</span>
-                <span className="tracking-wide">QUICK EXAMPLE QUERIES / ಉದಾಹರಣೆ ಪ್ರಶ್ನೆಗಳು:</span>
+                <span className="tracking-wide">{t.scenarios.orTestPresets}</span>
               </div>
               {exampleQueriesOpen ? (
                 <ChevronUp className="w-4 h-4 text-slate-500 shrink-0" />
@@ -644,10 +649,10 @@ export function App() {
                     </div>
                     <div className="min-w-0">
                       <div className="text-xs sm:text-sm font-black text-slate-900 truncate">
-                        Tea Vendor
+                        {t.scenarios.teaVendor.split('(')[0].replace(/[🍵\s]+$/, '').trim()}
                       </div>
                       <div className="text-[11px] text-slate-600 truncate mt-0.5">
-                        PM SVANidhi Loan
+                        {t.scenarios.teaVendor.includes('(') ? t.scenarios.teaVendor.split('(')[1].replace(')', '') : 'PM SVANidhi Loan'}
                       </div>
                     </div>
                   </div>
@@ -665,10 +670,10 @@ export function App() {
                     </div>
                     <div className="min-w-0">
                       <div className="text-xs sm:text-sm font-black text-slate-900 truncate">
-                        Auto Driver
+                        {t.scenarios.autoDriver.split('(')[0].replace(/[🛺\s]+$/, '').trim()}
                       </div>
                       <div className="text-[11px] text-slate-600 truncate mt-0.5">
-                        e-Shram, Social Security
+                        {t.scenarios.autoDriver.includes('(') ? t.scenarios.autoDriver.split('(')[1].replace(')', '') : 'PM-JAY Coverage'}
                       </div>
                     </div>
                   </div>
@@ -686,10 +691,10 @@ export function App() {
                     </div>
                     <div className="min-w-0">
                       <div className="text-xs sm:text-sm font-black text-slate-900 truncate">
-                        Construction Worker
+                        {t.scenarios.constructionWorker.split('(')[0].replace(/[🧱\s]+$/, '').trim()}
                       </div>
                       <div className="text-[11px] text-slate-600 truncate mt-0.5">
-                        BOCW Welfare, Insurance
+                        {t.scenarios.constructionWorker.includes('(') ? t.scenarios.constructionWorker.split('(')[1].replace(')', '') : 'BOCW Welfare, Insurance'}
                       </div>
                     </div>
                   </div>
